@@ -1,0 +1,2826 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Panel de empresa — Mudar</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --orange:#FF5A1F;--orange-light:#FFF0EB;--orange-dark:#E04A10;
+  --green:#16A34A;--green-light:#DCFCE7;
+  --yellow:#D97706;--yellow-light:#FEF3C7;
+  --red:#DC2626;--red-light:#FEE2E2;
+  --dark:#0F0F0F;--sidebar:#161616;--bg:#F4F4F5;--card:#FFFFFF;
+  --gray:#71717A;--border:#E4E4E7;
+  --radius:12px;--radius-sm:8px;
+}
+body{font-family:'DM Sans',sans-serif;color:var(--dark);background:var(--bg);min-height:100vh;}
+h1,h2,h3{font-family:'Outfit',sans-serif;}
+
+/* ══════════════════════════════
+   LOGIN
+══════════════════════════════ */
+#page-login{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:var(--dark);
+}
+#page-login::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse 60% 50% at 50% 30%,rgba(255,90,31,0.12),transparent 70%);
+  pointer-events:none;
+}
+.login-box{
+  background:white;border-radius:20px;padding:36px 32px;width:100%;max-width:380px;
+  box-shadow:0 32px 80px rgba(0,0,0,0.4);position:relative;z-index:1;
+}
+.login-brand{display:flex;align-items:center;gap:9px;margin-bottom:4px;}
+.login-brand-icon{width:34px;height:34px;background:var(--orange);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(255,90,31,0.35);}
+.login-brand-text{font-family:'Outfit',sans-serif;font-size:22px;font-weight:900;letter-spacing:-0.04em;color:var(--dark);line-height:1;}
+.login-brand-text span{color:var(--orange);}
+.login-badge{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray);margin-bottom:28px;}
+.login-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:22px;margin-bottom:6px;}
+.login-sub{font-size:14px;color:var(--gray);margin-bottom:20px;line-height:1.5;}
+.login-select{
+  width:100%;background:var(--bg);border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);padding:11px 14px;
+  font-family:'DM Sans',sans-serif;font-size:14px;color:var(--dark);
+  outline:none;appearance:none;-webkit-appearance:none;margin-bottom:12px;
+  transition:border-color 0.2s;
+}
+.login-select:focus{border-color:var(--orange);}
+.login-btn{
+  width:100%;background:var(--orange);color:white;border:none;
+  border-radius:50px;padding:13px;
+  font-family:'Outfit',sans-serif;font-weight:700;font-size:15px;
+  cursor:pointer;transition:all 0.18s;box-shadow:0 4px 16px rgba(255,90,31,0.3);
+}
+.login-btn:hover{background:var(--orange-dark);}
+
+/* ══════════════════════════════
+   APP LAYOUT
+══════════════════════════════ */
+#page-app{display:none;min-height:100vh;}
+
+/* Topbar */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:var(--dark);border-bottom:1px solid rgba(255,255,255,0.06);
+  height:60px;display:flex;align-items:center;padding:0 24px;gap:16px;
+}
+.topbar-logo{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.topbar-logo-icon{width:28px;height:28px;background:var(--orange);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.topbar-logo-text{font-family:'Outfit',sans-serif;font-weight:900;font-size:18px;color:white;letter-spacing:-0.04em;line-height:1;}
+.topbar-logo-text span{color:var(--orange);}
+.topbar-divider{width:1px;height:22px;background:rgba(255,255,255,0.08);}
+.topbar-emp{display:flex;align-items:center;gap:10px;}
+.topbar-av{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-family:'Outfit',sans-serif;font-weight:800;font-size:11px;}
+.topbar-name{font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;color:white;}
+.topbar-status{font-size:11px;color:rgba(255,255,255,0.35);}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+.topbar-sync{display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.3);}
+.sync-dot{width:5px;height:5px;border-radius:50%;background:var(--green);}
+.sync-dot.syncing{background:var(--orange);animation:pulse 0.8s infinite;}
+.notif-btn{
+  position:relative;width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,0.06);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+  transition:background 0.15s;
+}
+.notif-btn:hover{background:rgba(255,255,255,0.1);}
+.notif-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--orange);border:2px solid var(--dark);display:none;}
+.notif-dot.show{display:block;}
+
+/* Main grid */
+.app-body{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 60px);}
+
+/* Hamburger — oculto en desktop */
+.topbar-hamburger{display:none;background:none;border:none;cursor:pointer;color:white;font-size:20px;padding:4px;margin-left:auto;}
+
+/* ── RESPONSIVE MOBILE ── */
+@media(max-width:768px){
+  .topbar{padding:0 16px;gap:10px;}
+  .topbar-divider{display:none;}
+  .topbar-sync{display:none;}
+  .topbar-hamburger{display:flex;align-items:center;margin-left:auto;}
+  .app-body{grid-template-columns:1fr;}
+  .sidebar{position:fixed;top:60px;left:-100%;width:260px;height:calc(100vh - 60px);z-index:300;transition:left 0.25s ease;box-shadow:4px 0 24px rgba(0,0,0,0.4);}
+  .sidebar.open{left:0;}
+  .sidebar-overlay{display:none;position:fixed;inset:0;top:60px;background:rgba(0,0,0,0.5);z-index:299;}
+  .sidebar-overlay.show{display:block;}
+  .main-content{padding:16px;}
+  .page-hdr{flex-wrap:wrap;gap:8px;}
+  .page-title{font-size:18px;}
+  .page-actions{flex-wrap:wrap;}
+  .cot-layout{flex-direction:column!important;}
+  .cot-result{position:static!important;width:100%!important;}
+  .stats-row{grid-template-columns:repeat(2,1fr)!important;}
+  .pedido-route{flex-direction:column!important;gap:4px!important;}
+  .pedido-route-arrow{transform:rotate(90deg);align-self:center;}
+}
+
+/* Sidebar */
+.sidebar{
+  background:var(--dark);border-right:1px solid rgba(255,255,255,0.06);
+  padding:24px 0;position:sticky;top:60px;height:calc(100vh - 60px);
+  display:flex;flex-direction:column;overflow-y:auto;
+}
+.sidebar-section{padding:0 16px;margin-bottom:6px;}
+.sidebar-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.2);padding:0 8px;margin-bottom:6px;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;
+  border:none;background:none;cursor:pointer;width:100%;text-align:left;
+  transition:all 0.15s;color:rgba(255,255,255,0.45);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
+}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);}
+.nav-item.active{background:rgba(255,90,31,0.15);color:var(--orange);}
+.nav-icon{font-size:16px;flex-shrink:0;width:20px;text-align:center;}
+.nav-badge{margin-left:auto;background:var(--orange);color:white;border-radius:50px;padding:1px 7px;font-size:10px;font-weight:700;}
+.sidebar-footer{margin-top:auto;padding:16px;}
+.logout-btn{
+  display:flex;align-items:center;gap:8px;width:100%;padding:9px 12px;
+  border-radius:10px;border:none;background:none;cursor:pointer;
+  color:rgba(255,255,255,0.25);font-family:'DM Sans',sans-serif;font-size:13px;
+  transition:all 0.15s;
+}
+.logout-btn:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.5);}
+
+/* Main content */
+.main-content{padding:28px 32px;overflow-y:auto;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* Page header */
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.page-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:22px;letter-spacing:-0.03em;}
+.page-actions{display:flex;gap:8px;align-items:center;}
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:50px;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;cursor:pointer;padding:8px 18px;transition:all 0.15s;}
+.btn-primary{background:var(--orange);color:white;box-shadow:0 2px 8px rgba(255,90,31,0.25);}
+.btn-primary:hover{background:var(--orange-dark);}
+.btn-ghost{background:white;color:var(--dark);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--dark);}
+.btn-sm{padding:6px 14px;font-size:12px;}
+
+/* ══════════════════════════════
+   AGENDA TAB
+══════════════════════════════ */
+.agenda-grid{display:grid;grid-template-columns:320px 280px;gap:20px;align-items:start;}
+.cal-card{background:white;border-radius:var(--radius);border:1px solid var(--border);padding:14px;}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.cal-month{font-family:'Outfit',sans-serif;font-weight:800;font-size:15px;letter-spacing:-0.03em;}
+.cal-arrow{width:30px;height:30px;border-radius:50%;background:var(--bg);border:1px solid var(--border);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.cal-arrow:hover{background:var(--dark);color:white;border-color:var(--dark);}
+.cal-dow-row{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:8px;}
+.cal-dow{font-size:10px;font-weight:700;text-align:center;color:var(--gray);text-transform:uppercase;letter-spacing:0.04em;padding:4px 0;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.cal-day{aspect-ratio:1;border-radius:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s;position:relative;user-select:none;}
+.cal-day:hover:not(.empty):not(.past){filter:brightness(0.92);}
+.cal-day.empty{cursor:default;}
+.cal-day.past{opacity:0.3;cursor:default;}
+.cal-day .day-num{font-family:'Outfit',sans-serif;font-weight:700;font-size:11px;line-height:1;}
+.cal-day .day-dot{width:4px;height:4px;border-radius:50%;margin-top:2px;}
+.cal-day.available{background:var(--green-light);}
+.cal-day.available .day-num{color:var(--green);}
+.cal-day.available .day-dot{background:var(--green);}
+.cal-day.limited{background:var(--yellow-light);}
+.cal-day.limited .day-num{color:var(--yellow);}
+.cal-day.limited .day-dot{background:var(--yellow);}
+.cal-day.busy{background:var(--red-light);}
+.cal-day.busy .day-num{color:var(--red);}
+.cal-day.busy .day-dot{background:var(--red);}
+.cal-day.default{background:var(--bg);border:1px solid var(--border);}
+.cal-day.default .day-num{color:var(--dark);}
+.cal-day.default .day-dot{background:var(--green);opacity:0.3;}
+.cal-day.today{box-shadow:0 0 0 2px var(--orange);}
+.cal-day.has-mudar::after{content:'M';position:absolute;top:2px;right:3px;font-size:7px;font-weight:800;color:var(--orange);font-family:'Outfit',sans-serif;}
+.cal-day.selected{outline:2px solid var(--dark);outline-offset:1px;}
+.cal-legend{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--gray);}
+.leg-dot{width:8px;height:8px;border-radius:50%;}
+
+/* Day detail panel */
+.day-panel{background:white;border-radius:var(--radius);border:1px solid var(--border);padding:20px;position:sticky;top:88px;}
+.day-panel-empty{text-align:center;padding:32px 16px;color:var(--gray);}
+.day-panel-empty .icon{font-size:28px;margin-bottom:8px;}
+.day-panel-empty p{font-size:13px;line-height:1.5;}
+.day-panel-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:15px;margin-bottom:4px;}
+.day-panel-sub{font-size:12px;color:var(--gray);margin-bottom:16px;}
+.state-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+.state-btn{border:1.5px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;transition:all 0.15s;background:var(--bg);}
+.state-btn:hover{border-color:rgba(255,90,31,0.4);}
+.state-btn.sel-available{background:var(--green-light);border-color:var(--green);}
+.state-btn.sel-limited{background:var(--yellow-light);border-color:var(--yellow);}
+.state-btn.sel-busy{background:var(--red-light);border-color:var(--red);}
+.state-btn-icon{font-size:18px;margin-bottom:3px;}
+.state-btn-label{font-size:11px;font-weight:700;color:var(--gray);}
+.state-btn.sel-available .state-btn-label{color:var(--green);}
+.state-btn.sel-limited .state-btn-label{color:var(--yellow);}
+.state-btn.sel-busy .state-btn-label{color:var(--red);}
+.state-explanation{border-radius:8px;padding:10px 12px;font-size:12px;line-height:1.55;margin-top:10px;display:none;}
+
+/* ══════════════════════════════
+   PEDIDOS TAB
+══════════════════════════════ */
+.pedidos-grid{display:flex;flex-direction:column;gap:12px;max-width:720px;}
+
+.pedido-card{background:white;border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;}
+.pedido-card.nomade-card{border-left:3px solid var(--orange);}
+.pedido-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 8px;}
+.pedido-source{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--orange);}
+.pedido-time{font-size:11px;color:var(--gray);}
+.pedido-body{padding:0 14px 12px;}
+.pedido-route{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.pedido-route-from,.pedido-route-to{font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;}
+.pedido-route-arrow{color:var(--gray);font-size:12px;}
+.pedido-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.pedido-chip{font-size:11px;background:var(--bg);border-radius:50px;padding:3px 9px;font-weight:600;color:var(--gray);}
+.pedido-price{font-family:'Outfit',sans-serif;font-weight:900;font-size:18px;color:var(--orange);}
+.pedido-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 14px 14px;}
+.pedido-btn{border:none;border-radius:50px;padding:9px;font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:all 0.15s;}
+.pedido-btn:hover{opacity:0.85;}
+.pedido-btn.accept{background:var(--green);color:white;}
+.pedido-btn.reject{background:var(--red-light);color:var(--red);}
+.pedido-status{padding:6px 14px 8px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.pedido-status.aceptado{color:var(--green);}
+.pedido-status.rechazado{color:var(--red);padding-bottom:12px;}
+.wa-btn{
+  display:inline-flex;align-items:center;gap:4px;
+  background:#25D366;color:white;border-radius:50px;padding:5px 12px;
+  font-family:'Outfit',sans-serif;font-weight:700;font-size:11px;
+  text-decoration:none;transition:all 0.15s;white-space:nowrap;flex-shrink:0;
+}
+.wa-btn:hover{background:#1ebe5c;}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--orange);}
+
+/* ══════════════════════════════
+   TRABAJOS TAB
+══════════════════════════════ */
+.trabajos-layout{display:grid;grid-template-columns:300px 1fr;gap:24px;align-items:start;}
+.add-card{background:white;border-radius:var(--radius);border:1px solid var(--border);padding:20px;position:sticky;top:88px;}
+.add-card-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:15px;margin-bottom:16px;}
+.field{margin-bottom:12px;}
+.field-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--gray);margin-bottom:5px;display:block;}
+.field-input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);outline:none;transition:border-color 0.2s;}
+.field-input:focus{border-color:var(--orange);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.add-submit{width:100%;background:var(--dark);color:white;border:none;border-radius:50px;padding:11px;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.15s;margin-top:4px;}
+.add-submit:hover{background:#222;}
+
+/* Stats */
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;}
+.stat-card{background:white;border-radius:var(--radius-sm);border:1px solid var(--border);padding:14px;text-align:center;}
+.stat-num{font-family:'Outfit',sans-serif;font-weight:900;font-size:22px;line-height:1;}
+.stat-label{font-size:10px;color:var(--gray);margin-top:3px;text-transform:uppercase;letter-spacing:0.04em;}
+
+/* Filter pills */
+.filters-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.filter-pill{padding:5px 14px;border-radius:50px;border:1.5px solid var(--border);background:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;color:var(--gray);transition:all 0.15s;white-space:nowrap;}
+.filter-pill:hover{border-color:var(--orange);}
+.filter-pill.active{background:var(--dark);color:white;border-color:var(--dark);}
+.month-pills-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
+
+/* Day group */
+.day-group{margin-bottom:12px;}
+.day-group-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.day-group-label{font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;color:var(--dark);}
+.day-group-count{font-size:10px;font-weight:700;background:var(--border);border-radius:50px;padding:2px 7px;color:var(--gray);}
+.day-group-line{flex:1;height:1px;background:var(--border);}
+.day-group-cards{display:flex;flex-direction:column;gap:5px;}
+.month-header{font-family:'Outfit',sans-serif;font-weight:900;font-size:15px;letter-spacing:-0.02em;color:var(--dark);padding:14px 0 6px;border-bottom:2px solid var(--dark);margin-bottom:10px;}
+
+/* Trabajo card */
+.trabajo-card{background:white;border-radius:10px;border:1px solid var(--border);padding:11px 14px;display:flex;align-items:center;gap:12px;}
+.trabajo-card.nomade-card{border-left:3px solid var(--orange);}
+.trabajo-card.propio-card{border-left:3px solid var(--green);}
+.trabajo-card.past-card{opacity:0.4;}
+.tc-info{flex:1;min-width:0;}
+.tc-route{font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tc-meta{font-size:11px;color:var(--gray);margin-top:1px;}
+.tc-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
+.tc-precio{font-family:'Outfit',sans-serif;font-weight:800;font-size:13px;}
+.tc-tipo{font-size:9px;font-weight:700;padding:2px 7px;border-radius:50px;text-transform:uppercase;}
+.tc-tipo.nomade{background:var(--orange-light);color:var(--orange);}
+.tc-tipo.propio{background:var(--green-light);color:var(--green);}
+
+/* Empty */
+.empty-state{text-align:center;padding:48px 20px;color:var(--gray);}
+.empty-state .icon{font-size:32px;margin-bottom:10px;}
+.empty-state h3{font-family:'Outfit',sans-serif;font-weight:700;font-size:15px;color:var(--dark);margin-bottom:6px;}
+.empty-state p{font-size:13px;line-height:1.6;}
+
+/* Toast */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:white;padding:10px 18px;border-radius:50px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;z-index:500;white-space:nowrap;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,0.2);}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── Autocomplete dropdown ── */
+.ac-wrap { position: relative; }
+.ac-dropdown {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 9999;
+  background: white; border: 1px solid rgba(0,0,0,0.12); border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12); max-height: 220px; overflow-y: auto;
+  display: none;
+}
+.ac-dropdown.open { display: block; }
+.ac-item {
+  padding: 10px 14px; font-size: 13px; cursor: pointer;
+  border-bottom: 1px solid rgba(0,0,0,0.05); line-height: 1.4;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.ac-item:last-child { border-bottom: none; }
+.ac-item:hover, .ac-item.selected { background: #FFF0EB; }
+.ac-item-main { font-weight: 600; color: #111; }
+.ac-item-sub { font-size: 11px; color: #6B7280; }
+.ac-loading { padding: 12px 14px; font-size: 12px; color: #6B7280; text-align: center; }
+
+/* ══════════════════════════════
+   TARIFAS TAB
+══════════════════════════════ */
+.tarifas-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;max-width:900px;}
+.tarifa-block{background:white;border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;margin-bottom:16px;}
+.tarifa-block-header{padding:14px 18px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.tarifa-block-icon{font-size:17px;}
+.tarifa-block-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:14px;}
+.tarifa-block-sub{font-size:11px;color:var(--gray);margin-top:1px;}
+.tarifa-subsect{padding:7px 18px 5px;font-size:9px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray);background:var(--bg);border-bottom:1px solid var(--border);}
+.tarifa-row{display:flex;align-items:center;gap:12px;padding:11px 18px;border-bottom:1px solid var(--border);}
+.tarifa-row:last-child{border-bottom:none;}
+.t-toggle{position:relative;width:38px;height:20px;flex-shrink:0;}
+.t-toggle input{opacity:0;width:0;height:0;position:absolute;}
+.t-slider{position:absolute;inset:0;background:var(--border);border-radius:50px;cursor:pointer;transition:0.2s;}
+.t-slider:before{content:'';position:absolute;height:14px;width:14px;left:3px;top:3px;background:white;border-radius:50%;transition:0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.t-toggle input:checked + .t-slider{background:var(--orange);}
+.t-toggle input:checked + .t-slider:before{transform:translateX(18px);}
+.t-info{flex:1;min-width:0;}
+.t-label{font-size:13px;font-weight:600;color:var(--dark);}
+.t-desc{font-size:11px;color:var(--gray);margin-top:1px;}
+.t-price-wrap{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.t-prefix{font-size:11px;font-weight:700;color:var(--gray);}
+.t-suffix{font-size:11px;font-weight:600;color:var(--gray);}
+.t-input{width:88px;text-align:right;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:6px 10px;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;color:var(--dark);outline:none;transition:border-color 0.2s;}
+.t-input:focus{border-color:var(--orange);}
+.t-input:disabled{opacity:0.3;cursor:not-allowed;}
+.t-select{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);outline:none;cursor:pointer;transition:border-color 0.2s;}
+.t-select:focus{border-color:var(--orange);}
+.perfil-bar-card{background:white;border-radius:var(--radius);border:1px solid var(--border);padding:16px 18px;margin-bottom:16px;}
+.perfil-bar-track{height:5px;background:var(--bg);border-radius:50px;margin:10px 0 6px;overflow:hidden;}
+.perfil-bar-fill{height:100%;border-radius:50px;background:var(--orange);transition:width 0.5s ease;}
+.tarifa-save-btn{background:var(--orange);color:white;border:none;border-radius:50px;padding:11px 28px;font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all 0.15s;box-shadow:0 2px 8px rgba(255,90,31,0.25);}
+.tarifa-save-btn:hover{background:var(--orange-dark);}
+.express-badge{display:inline-flex;align-items:center;gap:4px;background:#FEF3C7;border-radius:50px;padding:2px 8px;font-size:10px;font-weight:700;color:var(--yellow);margin-left:6px;}
+
+/* ══════════════════════════════
+   COTIZADOR TAB
+══════════════════════════════ */
+.cotizador-layout{display:grid;grid-template-columns:420px 1fr;gap:24px;align-items:start;max-width:900px;}
+.cot-form-card{background:white;border-radius:var(--radius);border:1px solid var(--border);padding:22px;position:sticky;top:88px;}
+.cot-form-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:17px;margin-bottom:4px;}
+.cot-form-sub{font-size:12px;color:var(--gray);margin-bottom:18px;line-height:1.5;}
+.cot-field{margin-bottom:14px;}
+.cot-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--gray);margin-bottom:6px;display:block;}
+.cot-select{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);outline:none;transition:border-color 0.2s;cursor:pointer;}
+.cot-select:focus{border-color:var(--orange);}
+.cot-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.cot-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.cot-chip{padding:7px 14px;border-radius:50px;border:1.5px solid var(--border);background:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;color:var(--gray);transition:all 0.15s;}
+.cot-chip:hover{border-color:var(--orange);}
+.cot-chip.active{background:var(--dark);color:white;border-color:var(--dark);}
+.cot-divider{height:1px;background:var(--border);margin:16px 0;}
+.cot-svc-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.cot-svc-row:last-child{border-bottom:none;}
+.cot-svc-check{width:16px;height:16px;accent-color:var(--orange);cursor:pointer;flex-shrink:0;}
+.cot-svc-label{font-size:13px;flex:1;cursor:pointer;}
+.cot-svc-price{font-size:11px;font-weight:700;color:var(--gray);}
+.cot-svc-na{font-size:10px;color:var(--red);font-weight:600;background:var(--red-light);padding:2px 7px;border-radius:50px;}
+.cot-calc-btn{width:100%;background:var(--orange);color:white;border:none;border-radius:50px;padding:12px;font-family:'Outfit',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:all 0.15s;box-shadow:0 2px 8px rgba(255,90,31,0.25);margin-top:4px;}
+.cot-calc-btn:hover{background:var(--orange-dark);}
+.cot-result-card{background:var(--dark);border-radius:var(--radius);padding:22px;animation:fadeUp 0.3s ease both;}
+.cot-result-eyebrow{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:8px;}
+.cot-result-price{font-family:'Outfit',sans-serif;font-weight:900;font-size:40px;color:white;letter-spacing:-0.04em;line-height:1;}
+.cot-result-range{font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px;}
+.cot-breakdown{margin-top:18px;border-top:1px solid rgba(255,255,255,0.08);padding-top:14px;display:flex;flex-direction:column;gap:9px;}
+.cot-brow{display:flex;justify-content:space-between;align-items:center;}
+.cot-brow-label{font-size:12px;color:rgba(255,255,255,0.5);}
+.cot-brow-val{font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;color:white;}
+.cot-brow.is-total{border-top:1px solid rgba(255,255,255,0.12);padding-top:9px;margin-top:3px;}
+.cot-brow.is-total .cot-brow-label{color:rgba(255,255,255,0.75);font-weight:700;}
+.cot-brow.is-total .cot-brow-val{color:var(--orange);font-size:16px;}
+.cot-km-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.07);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.6);margin-top:10px;}
+.cot-wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#25D366;color:white;border:none;border-radius:50px;padding:12px;font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all 0.15s;margin-top:14px;}
+.cot-wa-btn:hover{background:#1ebe5c;}
+.cot-empty{background:white;border-radius:var(--radius);border:1px solid var(--border);padding:40px 24px;text-align:center;color:var(--gray);}
+.cot-empty .icon{font-size:32px;margin-bottom:10px;}
+.cot-empty h3{font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:var(--dark);margin-bottom:6px;}
+.cot-empty p{font-size:13px;line-height:1.6;}
+.cot-no-config{background:var(--yellow-light);border:1px solid rgba(217,119,6,0.2);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--yellow);font-weight:600;line-height:1.5;margin-bottom:14px;}
+
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div id="page-login">
+  <div class="login-box">
+    <div class="login-brand">
+      <div class="login-brand-icon">
+        <svg width="22" height="22" viewBox="0 0 38 38" fill="none">
+          <rect x="4" y="11" width="20" height="14" rx="2.5" fill="white"/>
+          <path d="M24 15H31L34 21V25H24V15Z" fill="white"/>
+          <rect x="25.5" y="16.5" width="5" height="4" rx="1" fill="#FF5A1F"/>
+          <circle cx="10" cy="27.5" r="3.5" fill="white" stroke="#FF5A1F" stroke-width="1.8"/>
+          <circle cx="10" cy="27.5" r="1.2" fill="#FF5A1F"/>
+          <circle cx="28" cy="27.5" r="3.5" fill="white" stroke="#FF5A1F" stroke-width="1.8"/>
+          <circle cx="28" cy="27.5" r="1.2" fill="#FF5A1F"/>
+        </svg>
+      </div>
+      <div class="login-brand-text">Mud<span>ar</span></div>
+    </div>
+    <div class="login-badge">Panel de empresa</div>
+    <div class="login-title">¡Hola! 👋</div>
+    <div class="login-sub">Ingresá con el email y contraseña de tu empresa.</div>
+    <input class="login-select" type="email" id="login-email" placeholder="email@tuempresa.com" style="margin-bottom:10px;"/>
+    <input class="login-select" type="password" id="login-pass" placeholder="Contraseña" style="margin-bottom:14px;" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <div id="login-error" style="display:none;background:#FEE2E2;color:#DC2626;border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600;margin-bottom:12px;"></div>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Entrar al panel →</button>
+  </div>
+</div>
+
+<!-- ══════════ APP ══════════ -->
+<div id="page-app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">
+      <div class="topbar-logo-icon">
+        <svg width="18" height="18" viewBox="0 0 38 38" fill="none">
+          <rect x="4" y="11" width="20" height="14" rx="2.5" fill="white"/>
+          <path d="M24 15H31L34 21V25H24V15Z" fill="white"/>
+          <rect x="25.5" y="16.5" width="5" height="4" rx="1" fill="#FF5A1F"/>
+          <circle cx="10" cy="27.5" r="3.5" fill="white" stroke="#FF5A1F" stroke-width="1.8"/>
+          <circle cx="10" cy="27.5" r="1.2" fill="#FF5A1F"/>
+          <circle cx="28" cy="27.5" r="3.5" fill="white" stroke="#FF5A1F" stroke-width="1.8"/>
+          <circle cx="28" cy="27.5" r="1.2" fill="#FF5A1F"/>
+        </svg>
+      </div>
+      <div class="topbar-logo-text">Mud<span>ar</span></div>
+    </div>
+    <div class="topbar-divider"></div>
+    <div class="topbar-emp">
+      <div class="topbar-av" id="tb-av">FL</div>
+      <div>
+        <div class="topbar-name" id="tb-name">—</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-sync">
+        <div class="sync-dot" id="sync-dot"></div>
+        <span id="sync-text">Conectando...</span>
+        <span id="sync-countdown" style="color:rgba(255,255,255,0.15);font-size:10px;"></span>
+      </div>
+      <button class="notif-btn" onclick="switchTab('pedidos')" title="Pedidos">
+        🔔
+        <div class="notif-dot" id="notif-dot"></div>
+      </button>
+      <button class="topbar-hamburger" id="topbar-hamburger" onclick="toggleSidebar()" title="Menú">☰</button>
+    </div>
+  </div>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- BODY -->
+  <div class="app-body">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Panel</div>
+        <button class="nav-item active" id="nav-hoy" onclick="switchTab('hoy')">
+          <span class="nav-icon">🏠</span> Próximos
+        </button>
+        <button class="nav-item" id="nav-agenda" onclick="switchTab('agenda')">
+          <span class="nav-icon">📅</span> Agenda
+        </button>
+        <button class="nav-item" id="nav-pedidos" onclick="switchTab('pedidos')">
+          <span class="nav-icon">📥</span> Pedidos
+          <span class="nav-badge" id="nav-badge" style="display:none">0</span>
+        </button>
+        <button class="nav-item" id="nav-trabajos" onclick="switchTab('trabajos')">
+          <span class="nav-icon">🚛</span> Mis trabajos
+        </button>
+        <button class="nav-item" id="nav-cotizador" onclick="switchTab('cotizador')">
+          <span class="nav-icon" style="font-family:'Outfit',sans-serif;font-weight:900;font-size:16px;">$</span> Cotizador
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Configuración</div>
+        <button class="nav-item" id="nav-tarifas" onclick="switchTab('tarifas')">
+          <span class="nav-icon">⚙️</span> Mis tarifas y servicios
+        </button>
+      </div>
+      <div class="sidebar-footer">
+        <button class="logout-btn" onclick="doLogout()">
+          <span>↩</span> Cerrar sesión
+        </button>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- ── HOY ── -->
+      <div class="tab-panel active" id="tab-hoy">
+        <div class="page-hdr">
+          <div class="page-title" id="hoy-greeting">Próximos trabajos</div>
+          <div class="page-actions"><span id="hoy-fecha" style="font-size:12px;color:var(--gray);"></span></div>
+        </div>
+        <div id="hoy-content"></div>
+      </div>
+
+      <!-- ── AGENDA ── -->
+      <div class="tab-panel" id="tab-agenda">
+        <div class="page-hdr">
+          <div class="page-title">Agenda</div>
+          <div class="page-actions">
+            <span id="tb-status" style="font-size:12px;color:var(--gray);"></span>
+          </div>
+        </div>
+
+        <div class="agenda-grid">
+          <!-- Calendario -->
+          <div class="cal-card">
+            <div class="cal-nav">
+              <button class="cal-arrow" onclick="prevMonth()">‹</button>
+              <div class="cal-month" id="cal-month">—</div>
+              <button class="cal-arrow" onclick="nextMonth()">›</button>
+            </div>
+            <div class="cal-dow-row">
+              <div class="cal-dow">Lu</div><div class="cal-dow">Ma</div><div class="cal-dow">Mi</div>
+              <div class="cal-dow">Ju</div><div class="cal-dow">Vi</div><div class="cal-dow">Sá</div><div class="cal-dow">Do</div>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+            <div class="cal-legend" style="margin-top:16px;">
+              <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>Libre</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--yellow)"></div>Tengo algo</div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div>Ocupado</div>
+              <div class="leg-item" style="font-size:11px;color:var(--gray);">M = pedido Mudar</div>
+            </div>
+          </div>
+
+          <!-- Panel día -->
+          <div class="day-panel" id="day-panel">
+            <div class="day-panel-empty" id="day-empty">
+              <div class="icon">📅</div>
+              <p>Hacé click en un día del calendario para marcar tu disponibilidad.</p>
+            </div>
+            <div id="day-detail" style="display:none;">
+              <div class="day-panel-title" id="day-panel-date">—</div>
+              <div class="day-panel-sub">¿Cómo está tu agenda ese día?</div>
+              <div class="state-btns">
+                <div class="state-btn" id="sb-available" onclick="setDayState('available')">
+                  <div class="state-btn-icon">✅</div>
+                  <div class="state-btn-label">Libre</div>
+                </div>
+                <div class="state-btn" id="sb-limited" onclick="setDayState('limited')">
+                  <div class="state-btn-icon">🟡</div>
+                  <div class="state-btn-label">Tengo algo</div>
+                </div>
+                <div class="state-btn" id="sb-busy" onclick="setDayState('busy')">
+                  <div class="state-btn-icon">🔴</div>
+                  <div class="state-btn-label">Ocupado</div>
+                </div>
+              </div>
+              <div class="state-explanation" id="state-explanation"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PEDIDOS ── -->
+      <div class="tab-panel" id="tab-pedidos">
+        <div class="page-hdr">
+          <div class="page-title">Pedidos de Mudar</div>
+          <div class="page-actions">
+            <button class="btn btn-ghost btn-sm" onclick="refreshPedidos()">↻ Actualizar</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+          <button class="filter-pill active" id="pf-todos" onclick="setPedidoFilter('todos')">Todos</button>
+          <button class="filter-pill" id="pf-pendiente" onclick="setPedidoFilter('pendiente')">🔔 Pendientes</button>
+          <button class="filter-pill" id="pf-aceptado" onclick="setPedidoFilter('aceptado')">✅ Aceptados</button>
+          <button class="filter-pill" id="pf-rechazado" onclick="setPedidoFilter('rechazado')">✕ Rechazados</button>
+          <select class="field-input" id="pedido-sort" onchange="renderPedidos()" style="max-width:160px;font-size:12px;padding:4px 10px;">
+            <option value="reciente">Más reciente</option>
+            <option value="fecha-asc">Fecha ↑</option>
+            <option value="fecha-desc">Fecha ↓</option>
+          </select>
+        </div>
+        <div id="pedidos-content"></div>
+      </div>
+
+      <!-- ── TRABAJOS ── -->
+      <div class="tab-panel" id="tab-trabajos">
+        <div class="page-hdr">
+          <div class="page-title">Mis trabajos</div>
+        </div>
+        <div class="trabajos-layout">
+
+          <!-- Agregar trabajo -->
+          <div class="add-card">
+            <div class="add-card-title">+ Agregar trabajo propio</div>
+
+            <!-- Origen -->
+            <div class="field">
+              <label class="field-label">📍 Origen — localidad / barrio</label>
+              <select class="field-input" id="add-origen">
+                  <option value="">— Localidad —</option>
+                  <optgroup label="CABA">
+                    <option>Agronomía</option><option>Almagro</option><option>Balvanera</option><option>Barracas</option><option>Belgrano</option><option>Boedo</option><option>Caballito</option><option>Chacarita</option><option>Coghlan</option><option>Colegiales</option><option>Constitución</option><option>Flores</option><option>Floresta</option><option>La Boca</option><option>Liniers</option><option>Mataderos</option><option>Montserrat</option><option>Nueva Pompeya</option><option>Núñez</option><option>Palermo</option><option>Recoleta</option><option>Retiro</option><option>Saavedra</option><option>San Cristóbal</option><option>San Nicolás</option><option>San Telmo</option><option>Villa Crespo</option><option>Villa del Parque</option><option>Villa Devoto</option><option>Villa Lugano</option><option>Villa Urquiza</option>
+                  </optgroup>
+                  <optgroup label="GBA Norte">
+                    <option>San Isidro</option><option>Vicente López</option><option>Tigre</option><option>San Martín</option><option>Escobar</option><option>Pilar</option>
+                  </optgroup>
+                  <optgroup label="GBA Sur">
+                    <option>Avellaneda</option><option>Lanús</option><option>Lomas de Zamora</option><option>Quilmes</option><option>Almirante Brown</option><option>Berazategui</option>
+                  </optgroup>
+                  <optgroup label="GBA Oeste">
+                    <option>Morón</option><option>Ituzaingó</option><option>Hurlingham</option><option>Merlo</option><option>Moreno</option>
+                  </optgroup>
+              </select>
+            </div>
+            <div class="field-row">
+              <div class="field" style="flex:2;">
+                <label class="field-label">Dirección</label>
+                <input class="field-input" type="text" id="add-origen-dir" placeholder="Ej: Av. Santa Fe" autocomplete="off"/>
+              </div>
+              <div class="field" style="flex:1;">
+                <label class="field-label">Número</label>
+                <input class="field-input" type="text" id="add-origen-num" placeholder="Ej: 1234"/>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label class="field-label">Tipo de unidad</label>
+                <select class="field-input" id="add-origen-tipo">
+                  <option value="">— Seleccioná —</option>
+                  <option>Departamento</option>
+                  <option>Casa</option>
+                  <option>Oficina</option>
+                  <option>Local comercial</option>
+                  <option>Depósito</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field-label">Piso / Unidad</label>
+                <input class="field-input" type="text" id="add-origen-piso" placeholder="Ej: Piso 3B"/>
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label" style="display:flex;align-items:center;gap:6px;">
+                <input type="checkbox" id="add-origen-ascensor" style="accent-color:var(--orange);width:15px;height:15px;"/> Con ascensor
+              </label>
+            </div>
+
+            <!-- Destino -->
+            <div class="field" style="margin-top:4px;">
+              <label class="field-label">🏁 Destino — localidad / barrio</label>
+              <select class="field-input" id="add-destino">
+                  <option value="">— Localidad —</option>
+                  <optgroup label="CABA">
+                    <option>Agronomía</option><option>Almagro</option><option>Balvanera</option><option>Barracas</option><option>Belgrano</option><option>Boedo</option><option>Caballito</option><option>Chacarita</option><option>Coghlan</option><option>Colegiales</option><option>Constitución</option><option>Flores</option><option>Floresta</option><option>La Boca</option><option>Liniers</option><option>Mataderos</option><option>Montserrat</option><option>Nueva Pompeya</option><option>Núñez</option><option>Palermo</option><option>Recoleta</option><option>Retiro</option><option>Saavedra</option><option>San Cristóbal</option><option>San Nicolás</option><option>San Telmo</option><option>Villa Crespo</option><option>Villa del Parque</option><option>Villa Devoto</option><option>Villa Lugano</option><option>Villa Urquiza</option>
+                  </optgroup>
+                  <optgroup label="GBA Norte">
+                    <option>San Isidro</option><option>Vicente López</option><option>Tigre</option><option>San Martín</option><option>Escobar</option><option>Pilar</option>
+                  </optgroup>
+                  <optgroup label="GBA Sur">
+                    <option>Avellaneda</option><option>Lanús</option><option>Lomas de Zamora</option><option>Quilmes</option><option>Almirante Brown</option><option>Berazategui</option>
+                  </optgroup>
+                  <optgroup label="GBA Oeste">
+                    <option>Morón</option><option>Ituzaingó</option><option>Hurlingham</option><option>Merlo</option><option>Moreno</option>
+                  </optgroup>
+              </select>
+            </div>
+            <div class="field-row">
+              <div class="field" style="flex:2;">
+                <label class="field-label">Dirección</label>
+                <input class="field-input" type="text" id="add-destino-dir" placeholder="Ej: Rivadavia" autocomplete="off"/>
+              </div>
+              <div class="field" style="flex:1;">
+                <label class="field-label">Número</label>
+                <input class="field-input" type="text" id="add-destino-num" placeholder="Ej: 5000"/>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label class="field-label">Tipo de unidad</label>
+                <select class="field-input" id="add-destino-tipo">
+                  <option value="">— Seleccioná —</option>
+                  <option>Departamento</option>
+                  <option>Casa</option>
+                  <option>Oficina</option>
+                  <option>Local comercial</option>
+                  <option>Depósito</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field-label">Piso / Unidad</label>
+                <input class="field-input" type="text" id="add-destino-piso" placeholder="Ej: Piso 4A"/>
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label" style="display:flex;align-items:center;gap:6px;">
+                <input type="checkbox" id="add-destino-ascensor" style="accent-color:var(--orange);width:15px;height:15px;"/> Con ascensor
+              </label>
+            </div>
+
+            <!-- Logística -->
+            <div class="field-row" style="margin-top:4px;">
+              <div class="field">
+                <label class="field-label">🚛 Camión</label>
+                <select class="field-input" id="add-camion">
+                  <option value="">— Seleccioná —</option>
+                  <option>Camión chico</option>
+                  <option>Camión mediano</option>
+                  <option>Camión grande</option>
+                  <option>Utilitario</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field-label">🌅 Horario</label>
+                <select class="field-input" id="add-horario">
+                  <option value="">— Seleccioná —</option>
+                  <option>Mañana (8–12 hs)</option>
+                  <option>Mediodía (12–16 hs)</option>
+                  <option>Tarde (16–20 hs)</option>
+                  <option>A confirmar</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Cliente -->
+            <div class="field-row" style="margin-top:4px;">
+              <div class="field">
+                <label class="field-label">👤 Nombre del cliente</label>
+                <input class="field-input" type="text" id="add-cliente-nombre" placeholder="Ej: Juan"/>
+              </div>
+              <div class="field">
+                <label class="field-label">📞 Teléfono</label>
+                <input class="field-input" type="tel" id="add-cliente-tel" placeholder="Ej: 1121716574"/>
+              </div>
+            </div>
+
+            <!-- Notas -->
+            <div class="field">
+              <label class="field-label">💬 Objetos especiales / notas</label>
+              <input class="field-input" type="text" id="add-notas" placeholder="Ej: piano y batería"/>
+            </div>
+
+            <!-- Fecha y precio -->
+            <div class="field-row" style="margin-top:4px;">
+              <div class="field">
+                <label class="field-label">📅 Fecha</label>
+                <input class="field-input" type="date" id="add-fecha"/>
+              </div>
+              <div class="field">
+                <label class="field-label">💰 Precio ($)</label>
+                <input class="field-input" type="number" id="add-precio" placeholder="95000"/>
+              </div>
+            </div>
+
+            <button class="add-submit" onclick="addTrabajo()">Guardar trabajo →</button>
+          </div>
+
+          <!-- Lista trabajos -->
+          <div>
+            <div class="stats-row" id="trabajos-stats"></div>
+
+            <div class="filters-row">
+              <button class="filter-pill active" id="tf-todos" onclick="setTipoFilter('todos')">Todos</button>
+              <button class="filter-pill" id="tf-nomade" onclick="setTipoFilter('nomade')">🟠 Mudar</button>
+              <button class="filter-pill" id="tf-propio" onclick="setTipoFilter('propio')">🟢 Propios</button>
+              <button class="filter-pill" id="tf-realizado" onclick="setTipoFilter('realizado')">✅ Realizados</button>
+            </div>
+            <div class="month-pills-row" id="month-filters"></div>
+            <div id="trabajos-list"></div>
+          </div>
+        </div>
+      </div>
+
+  <div class="tab-panel" id="tab-tarifas">
+    <div class="page-hdr">
+      <div class="page-title">Mis tarifas y servicios</div>
+      <div class="page-actions">
+        <button class="btn btn-primary" onclick="saveTarifas()">Guardar cambios →</button>
+      </div>
+    </div>
+
+    <div class="perfil-bar-card" style="max-width:900px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:15px;">Completitud del perfil</div>
+          <div style="font-size:11px;color:var(--gray);margin-top:2px;" id="perfil-bar-label">Completá tus tarifas para aparecer en el marketplace</div>
+        </div>
+        <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:24px;" id="perfil-pct">0%</div>
+      </div>
+      <div class="perfil-bar-track"><div class="perfil-bar-fill" id="perfil-bar" style="width:0%"></div></div>
+    </div>
+
+    <div class="tarifas-layout">
+
+      <!-- COL IZQ -->
+      <div>
+
+        <!-- VEHÍCULOS -->
+        <div class="tarifa-block">
+          <div class="tarifa-block-header">
+            <div class="tarifa-block-icon">🚛</div>
+            <div>
+              <div class="tarifa-block-title">Vehículos y tarifa base</div>
+              <div class="tarifa-block-sub">Activá los que tenés. La tarifa base es el precio mínimo por tipo de viaje.</div>
+            </div>
+          </div>
+          <div class="tarifa-row">
+            <label class="t-toggle"><input type="checkbox" id="v-utilitario" onchange="updateTarifa()"><span class="t-slider"></span></label>
+            <div class="t-info"><div class="t-label">Utilitario / Van</div><div class="t-desc">Hasta 1 amb · cajas, ropa, muebles chicos</div></div>
+            <div class="t-price-wrap"><span class="t-prefix">$</span><input class="t-input" type="number" id="p-utilitario" placeholder="0" disabled onchange="updateTarifa()"></div>
+          </div>
+          <div class="tarifa-row">
+            <label class="t-toggle"><input type="checkbox" id="v-camioneta" onchange="updateTarifa()"><span class="t-slider"></span></label>
+            <div class="t-info"><div class="t-label">Camioneta / Pick-up</div><div class="t-desc">1–2 amb · departamento estándar</div></div>
+            <div class="t-price-wrap"><span class="t-prefix">$</span><input class="t-input" type="number" id="p-camioneta" placeholder="0" disabled onchange="updateTarifa()"></div>
+          </div>
+          <div class="tarifa-row">
+            <label class="t-toggle"><input type="checkbox" id="v-camion-chico" onchange="updateTarifa()"><span class="t-slider"></span></label>
+            <div class="t-info"><div class="t-label">Camión chico</div><div class="t-desc">2–3 amb · mudanza familiar mediana</div></div>
+            <div class="t-price-wrap"><span class="t-prefix">$</span><input class="t-input" type="number" id="p-camion-chico" placeholder="0" disabled onchange="updateTarifa()"></div>
+          </div>
+          <div class="tarifa-row">
+            <label class="t-toggle"><input type="checkbox" id="v-camion-grande" onchange="updateTarifa()"><span class="t-slider"></span></label>
+            <div class="t-info"><div class="t-label">Camión grande</div><div class="t-desc">3+ amb / casa completa</div></div>
+            <div class="t-price-wrap"><span class="t-prefix">$</span><input class="t-input" type="number" id="p-camion-grande" placeholder="0" disabled onchange="updateTarifa()"></div>
+          </div>
+        </div>
+
+        <!-- TARIFA HORARIA DE TRASLADO -->
+        <div class="tarifa-block">
+          <div class="tarifa-block-header">
+            <div class="tarifa-block-icon">⏱</div>
+            <div>
+              <div class="tarifa-block-title">Tarifa por hora de traslado</div>
+              <div class="tarifa-block-sub">Se suma cuando la distancia implica tiempo de viaje real. A 10 cuadras: 0 hs. A 2 horas: se cobran esas horas.</div>
+            </div>
+          </div>
+          <div class="tarifa-row">
+            <div class="t-info"><div class="t-label">Precio por hora de traslado</div><div class="t-desc">Ref. mercado por vehículo solo: $18.000–$60.000/hs</div></div>
+            <div class="t-price-wrap"><span class="t-prefix">$</span><input class="t-input" type="number" id="r-precio-hora" placeholder="0" onchange="updateTarifa()"><span class="t-suffix">/hs</span></div>
+          </div>
+          <div class="tarifa-row">
+            <div class="t-info"><div class="t-label">Horas incluidas en tarifa base</div><div class="t-desc">Las primeras X horas ya están cubiertas por el precio del vehículo</div></div>
+            <div class="t-price-wrap"><input class="t-input" type="number" id="r-horas-incluidas" placeholder="1" onchange="updateTarifa()"><span class="t-suffix">hs</span></div>
+          </div>
+        </div>
+
+        <!-- RECARGOS DÍA / HORARIO -->
+        <div class="tarifa-block">
+          <div class="tarifa-block-header">
+            <div class="tarifa-block-icon">📅</div>
+            <div>
+              <div class="tarifa-block-title">Recargos por día</div>
+              <div class="tarifa-block-sub">Se aplican automáticamente según la fecha que elige el cliente</div>
+            </div>
+          </div>
+          <div class="tarifa-row">
+            <div class="t-info"><div class="t-label">Recargo sábado</div><div class="t-desc">Ref. mercado: +10 a 20%</div></div>
+            <div class="t-price-wrap"><input class="t-input" type="number" id="r-recargo-sabado" placeholder="15" onchange="updateTarifa()"><span class="t-suffix">%</span></div>
+          </div>
+          <div class="tarifa-row">
+            <div class="t-info"><div class="t-label">Recargo domingo / feriado</div><div class="t-desc">Ref. mercado: +30 a 50%</div></div>
+            <div class="t-price-wrap"><input class="t-input" type="number" id="r-recargo-domingo" placeholder="40" onchange="updateTarifa()"><span class="t-suffix">%</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COL DER -->
+      <div>
+
+        <!-- PISOS Y ACCESO -->
+        <div class="tarifa-block">
+          <div class="tarifa-block-header">
+            <div class="tarifa-block-icon">🏢</div>
+            <div>
+              <div class="tarifa-block-title">Pisos y acceso</div>
+              <div class="tarifa-block-sub">Recargos automáticos según datos del pedido</div>
+            </div>
+          </div>
+          <div class="tarifa-row">
+            <div class="t-info"><div class="t-label">Recargo por piso sin ascensor</div><div class="t-desc">Por cada piso de escalera, origen + destino</div></div>
+            <div class="t-price-wrap"><span class="t-prefix">$</span><input class="t-input" type="number" id="r-piso" placeholder="0" onchange="updateTarifa()"><span class="t-suffix">/piso</span></div>
+          </div>
+          <div class="tarifa-row">
+            <div class="t-info"><div class="t-label">Recargo acceso difícil</div><div class="t-desc">Escalera angosta, sin estacionamiento frente al edificio</div></div>
+            <div class="t-price-wrap"><span class="t-prefix">$</span><input class="t-input" type="number" id="r-acceso-dificil" placeholder="0" onchange="updateTarifa()"></div>
+          </div>
+          <div class="tarifa-row">
+            <label class="t-toggle"><input type="checkbox" id="s-sillones-balcon" onchange="toggleServicio('sillones-balcon')"><span class="t-slider"></span></label>
+            <div class="t-info"><div class="t-label">Subida/bajada por balcón</div><div class="t-desc">Sogas y maniobra para sillones u objetos grandes</div></div>
+            <div class="t-price-wrap"><span class="t-prefix">$</span><input class="t-input" type="number" id="p-sillones-balcon" placeholder="0" disabled onchange="updateTarifa()"></div>
+          </div>
+        </div>
+
+        <!-- AYUDANTES -->
+        <div class="tarifa-block">
+          <div class="tarifa-block-header">
+            <div class="tarifa-block-icon">👷</div>
+            <div>
+              <div class="tarifa-block-title">Ayudantes</div>
+              <div class="tarifa-block-sub">Cuántos van incluidos en el precio base y costo del extra</div>
+            </div>
+          </div>
+          <div class="tarifa-row">
+            <div class="t-info"><div class="t-label">Mínimo de horas por trabajo</div><div class="t-desc">Tiempo mínimo cobrado siempre (ref: 2–3 hs)</div></div>
+            <div class="t-price-wrap"><input class="t-input" type="number" id="r-horas-min" placeholder="2" onchange="updateTarifa()"><span class="t-suffix">hs</span></div>
+          </div>
+          <div class="tarifa-row">
+            <div class="t-info"><div class="t-label">Ayudantes incluidos en precio base</div><div class="t-desc">Van siempre sin costo adicional</div></div>
+            <select class="t-select" id="r-ayudantes-incluidos" onchange="updateTarifa()">
+              <option value="0">0 ayudantes</option>
+              <option value="1" selected>1 ayudante</option>
+              <option value="2">2 ayudantes</option>
+              <option value="3">3 ayudantes</option>
+            </select>
+          </div>
+          <div class="tarifa-row">
+            <div class="t-info"><div class="t-label">Costo ayudante adicional</div><div class="t-desc">Por persona extra, por mudanza completa</div></div>
+            <div class="t-price-wrap"><span class="t-prefix">$</span><input class="t-input" type="number" id="r-ayudante-extra" placeholder="0" onchange="updateTarifa()"></div>
+          </div>
+        </div>
+
+        <!-- SERVICIOS ADICIONALES -->
+        <div class="tarifa-block">
+          <div class="tarifa-block-header">
+            <div class="tarifa-block-icon">🔧</div>
+            <div>
+              <div class="tarifa-block-title">Servicios adicionales</div>
+              <div class="tarifa-block-sub">Tildá lo que ofrecés — aparecés en búsquedas que los requieran</div>
+            </div>
+          </div>
+          <div class="tarifa-subsect">Embalaje y manipulación</div>
+          <div class="tarifa-row">
+            <label class="t-toggle"><input type="checkbox" id="s-embalaje" onchange="toggleServicio('embalaje')"><span class="t-slider"></span></label>
+            <div class="t-info"><div class="t-label">Embalaje completo</div><div class="t-desc">Cajas, papel burbuja, film, etiquetado incluidos</div></div>
+            <div class="t-price-wrap"><span class="t-prefix">$</span><input class="t-input" type="number" id="p-embalaje" placeholder="0" disabled onchange="updateTarifa()"></div>
+          </div>
+          <div class="tarifa-row">
+            <label class="t-toggle"><input type="checkbox" id="s-desarme" onchange="toggleServicio('desarme')"><span class="t-slider"></span></label>
+            <div class="t-info"><div class="t-label">Desarme y armado de muebles</div><div class="t-desc">Camas, placards, bibliotecas, escritorios</div></div>
+            <div class="t-price-wrap"><span class="t-prefix">$</span><input class="t-input" type="number" id="p-desarme" placeholder="0" disabled onchange="updateTarifa()"></div>
+          </div>
+          <div class="tarifa-subsect">Objetos especiales</div>
+          <div class="tarifa-row">
+            <label class="t-toggle"><input type="checkbox" id="s-fragiles" onchange="toggleServicio('fragiles')"><span class="t-slider"></span></label>
+            <div class="t-info"><div class="t-label">Objetos frágiles / arte</div><div class="t-desc">Cuadros, espejos grandes, piezas de valor</div></div>
+            <div class="t-price-wrap"><span class="t-prefix">$</span><input class="t-input" type="number" id="p-fragiles" placeholder="0" disabled onchange="updateTarifa()"></div>
+          </div>
+          <div class="tarifa-row">
+            <label class="t-toggle"><input type="checkbox" id="s-piano" onchange="toggleServicio('piano')"><span class="t-slider"></span></label>
+            <div class="t-info"><div class="t-label">Piano / caja fuerte</div><div class="t-desc">Requiere maniobra y equipamiento especial</div></div>
+            <div class="t-price-wrap"><span class="t-prefix">$</span><input class="t-input" type="number" id="p-piano" placeholder="0" disabled onchange="updateTarifa()"></div>
+          </div>
+          <div class="tarifa-subsect">Otros</div>
+          <div class="tarifa-row">
+            <label class="t-toggle"><input type="checkbox" id="s-guardamuebles" onchange="toggleServicio('guardamuebles')"><span class="t-slider"></span></label>
+            <div class="t-info"><div class="t-label">Guardamuebles</div><div class="t-desc">Propio o asociado — storage mensual para el cliente</div></div>
+            <div class="t-price-wrap"><span class="t-prefix">$</span><input class="t-input" type="number" id="p-guardamuebles" placeholder="0" disabled onchange="updateTarifa()"></div>
+          </div>
+          <div class="tarifa-row">
+            <label class="t-toggle"><input type="checkbox" id="s-seguro" onchange="updateTarifa()"><span class="t-slider"></span></label>
+            <div class="t-info"><div class="t-label">Seguro de carga incluido</div><div class="t-desc">Aparece en tu perfil como diferencial premium — sin precio extra</div></div>
+          </div>
+          <div class="tarifa-row">
+            <label class="t-toggle"><input type="checkbox" id="s-express" onchange="updateTarifa()"><span class="t-slider"></span></label>
+            <div class="t-info">
+              <div class="t-label">Traslado express / mismo día <span class="express-badge">⚡ Nuevo</span></div>
+              <div class="t-desc">Menos de 24hs de anticipación — más allá de mudanzas planificadas</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="tab-panel" id="tab-cotizador">
+    <div class="page-hdr">
+      <div class="page-title">Cotizador</div>
+      <div class="page-actions"><span style="font-size:12px;color:var(--gray);">Generá una cotización y compartila por WhatsApp</span></div>
+    </div>
+
+    <div id="cot-no-config" class="cot-no-config" style="display:none;max-width:900px;margin-bottom:20px;"></div>
+
+    <div class="cotizador-layout">
+
+      <!-- FORMULARIO -->
+      <div class="cot-form-card">
+        <div class="cot-form-title">Nueva cotización</div>
+        <div class="cot-form-sub">Completá los datos. El precio se calcula con tus tarifas exactas — igual que el marketplace.</div>
+
+        <div class="cot-field">
+          <label class="cot-label">Vehículo</label>
+          <select class="cot-select" id="cot-vehiculo" onchange="calcCotizador()">
+            <option value="">— Seleccioná el vehículo —</option>
+            <option value="utilitario">🚐 Utilitario — hasta 1 amb</option>
+            <option value="camioneta">🚙 Camioneta — 1 a 2 amb</option>
+            <option value="camion-chico">🚛 Camión chico — 2 a 3 amb</option>
+            <option value="camion-grande">🚚 Camión grande — 3+ amb / casa</option>
+          </select>
+        </div>
+
+        <div class="cot-field">
+          <label class="cot-label">Tipo de vivienda</label>
+          <select class="cot-select" id="cot-vivienda" onchange="calcCotizador()">
+            <option value="">— Seleccioná (opcional) —</option>
+            <option value="mono">🏠 Monoambiente</option>
+            <option value="2amb">🏠 2 ambientes</option>
+            <option value="3amb">🏠 3 ambientes</option>
+            <option value="casa">🏡 Casa / 4+ ambientes</option>
+          </select>
+        </div>
+
+        <div class="cot-field">
+          <label class="cot-label">⏱ Horas de traslado estimadas</label>
+          <div class="cot-chips" id="cot-horas-chips">
+            <div class="cot-chip active" onclick="setCotHoras(0,this)">Local<br><span style="font-size:10px;opacity:0.6;">&lt;30 min</span></div>
+            <div class="cot-chip" onclick="setCotHoras(0.5,this)">0.5 hs</div>
+            <div class="cot-chip" onclick="setCotHoras(1,this)">1 hs</div>
+            <div class="cot-chip" onclick="setCotHoras(1.5,this)">1.5 hs</div>
+            <div class="cot-chip" onclick="setCotHoras(2,this)">2 hs</div>
+            <div class="cot-chip" onclick="setCotHoras(3,this)">3+ hs</div>
+          </div>
+          <div id="cot-horas-info" style="font-size:11px;color:var(--gray);margin-top:6px;"></div>
+        </div>
+
+        <div class="cot-field">
+          <label class="cot-label">Fecha de mudanza</label>
+          <input type="date" class="cot-select" id="cot-fecha" onchange="calcCotizador()">
+          <div id="cot-dia-badge" style="display:none;margin-top:6px;"></div>
+        </div>
+
+        <div class="cot-row">
+          <div class="cot-field">
+            <label class="cot-label">Piso origen (sin asc.)</label>
+            <select class="cot-select" id="cot-piso-origen" onchange="calcCotizador()">
+              <option value="0">PB / con ascensor</option>
+              <option value="1">1° piso</option>
+              <option value="2">2° piso</option>
+              <option value="3">3° piso</option>
+              <option value="4">4° o más</option>
+            </select>
+          </div>
+          <div class="cot-field">
+            <label class="cot-label">Piso destino (sin asc.)</label>
+            <select class="cot-select" id="cot-piso-destino" onchange="calcCotizador()">
+              <option value="0">PB / con ascensor</option>
+              <option value="1">1° piso</option>
+              <option value="2">2° piso</option>
+              <option value="3">3° piso</option>
+              <option value="4">4° o más</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="cot-field">
+          <label class="cot-label" style="display:flex;align-items:center;gap:8px;">
+            <input type="checkbox" id="cot-acceso-dificil" onchange="calcCotizador()" style="accent-color:var(--orange);width:15px;height:15px;">
+            Acceso difícil (escalera angosta / sin estacionamiento)
+          </label>
+        </div>
+
+        <div class="cot-field">
+          <label class="cot-label">Ayudantes adicionales</label>
+          <div class="cot-chips" id="cot-ayudantes-chips">
+            <div class="cot-chip active" onclick="setCotAyudante(0,this)">+0</div>
+            <div class="cot-chip" onclick="setCotAyudante(1,this)">+1</div>
+            <div class="cot-chip" onclick="setCotAyudante(2,this)">+2</div>
+            <div class="cot-chip" onclick="setCotAyudante(3,this)">+3</div>
+          </div>
+        </div>
+
+        <div class="cot-divider"></div>
+
+        <div class="cot-field">
+          <label class="cot-label">Servicios adicionales</label>
+          <div id="cot-servicios-list"></div>
+        </div>
+
+        <button class="cot-calc-btn" onclick="calcCotizador()">Calcular precio →</button>
+      </div>
+
+      <!-- RESULTADO -->
+      <div>
+        <div class="cot-empty" id="cot-empty-state">
+          <div class="icon">💲</div>
+          <h3>Tu cotización aparece acá</h3>
+          <p>Completá el formulario. El precio se calcula con tus tarifas exactas y podés compartirlo como imagen por WhatsApp.</p>
+        </div>
+        <div id="cot-resultado" style="display:none;"></div>
+      </div>
+
+    </div>
+
+    <!-- CANVAS oculto para generar imagen -->
+    <canvas id="cot-canvas" style="display:none;"></canvas>
+  </div>
+    </main>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+//  CONFIG FIREBASE
+// ══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
+//  FIREBASE CONFIG REAL
+// ══════════════════════════════════════════════════════════
+const FIREBASE_URL = 'https://nomade-68bdc-default-rtdb.firebaseio.com';
+const FIREBASE_AUTH_URL = 'https://identitytoolkit.googleapis.com/v1';
+const FIREBASE_API_KEY = 'AIzaSyBlBblAt9pCOZblWhe0kxK7E7T4vaDar-Y';
+
+let authToken = null;
+let authRefreshToken = null;
+let authTokenExpiry = null;
+
+// ── Auth ──
+async function firebaseSignIn(email, password) {
+  const r = await fetch(`${FIREBASE_AUTH_URL}/accounts:signInWithPassword?key=${FIREBASE_API_KEY}`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({email, password, returnSecureToken: true})
+  });
+  const data = await r.json();
+  if (data.error) throw new Error(data.error.message);
+  authToken = data.idToken;
+  authRefreshToken = data.refreshToken;
+  authTokenExpiry = Date.now() + (parseInt(data.expiresIn) - 300) * 1000;
+  sessionStorage.setItem('mudar_token', authToken);
+  sessionStorage.setItem('mudar_uid', data.localId);
+  sessionStorage.setItem('mudar_refresh', data.refreshToken);
+  sessionStorage.setItem('mudar_expiry', authTokenExpiry.toString());
+  return data;
+}
+
+async function refreshAuthToken() {
+  const refresh = authRefreshToken || sessionStorage.getItem('mudar_refresh');
+  if (!refresh) return false;
+  try {
+    const r = await fetch(`https://securetoken.googleapis.com/v1/token?key=${FIREBASE_API_KEY}`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({grant_type: 'refresh_token', refresh_token: refresh})
+    });
+    const data = await r.json();
+    if (data.error || !data.id_token) return false;
+    authToken = data.id_token;
+    authRefreshToken = data.refresh_token;
+    authTokenExpiry = Date.now() + (parseInt(data.expires_in) - 300) * 1000;
+    sessionStorage.setItem('mudar_token', authToken);
+    sessionStorage.setItem('mudar_refresh', authRefreshToken);
+    sessionStorage.setItem('mudar_expiry', authTokenExpiry.toString());
+    return true;
+  } catch(e) { return false; }
+}
+
+async function getValidToken() {
+  const expiry = authTokenExpiry || parseInt(sessionStorage.getItem('mudar_expiry') || '0');
+  if (Date.now() >= expiry) {
+    const ok = await refreshAuthToken();
+    if (!ok) { doLogout(); return null; }
+  }
+  return authToken || sessionStorage.getItem('mudar_token');
+}
+
+function getStoredToken() {
+  return sessionStorage.getItem('mudar_token');
+}
+
+// ── DB ──
+const DB = {
+  async get(path) {
+    const token = await getValidToken();
+    const url = `${FIREBASE_URL}/${path}.json${token ? '?auth='+token : ''}`;
+    try { const r = await fetch(url); return await r.json(); }
+    catch(e) { return null; }
+  },
+  async set(path, value) {
+    const token = await getValidToken();
+    const url = `${FIREBASE_URL}/${path}.json${token ? '?auth='+token : ''}`;
+    try {
+      await fetch(url, {method:'PUT', body:JSON.stringify(value), headers:{'Content-Type':'application/json'}});
+      return true;
+    } catch(e) { return false; }
+  },
+  async push(path, value) {
+    const id = 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+    const token = await getValidToken();
+    const url = `${FIREBASE_URL}/${path}/${id}.json${token ? '?auth='+token : ''}`;
+    try {
+      await fetch(url, {method:'PUT', body:JSON.stringify({...value,id}), headers:{'Content-Type':'application/json'}});
+      return id;
+    } catch(e) { return null; }
+  },
+  async getAll(path) {
+    const d = await this.get(path);
+    if (!d) return [];
+    if (Array.isArray(d)) return d.filter(Boolean);
+    if (typeof d === 'object') return Object.values(d);
+    return [];
+  }
+};
+
+
+// ══════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════
+let currentEmpId = null, currentEmp = null;
+let calYear, calMonth, selectedDay = null;
+let disponibilidad = {}, pedidos = [], trabajos = [];
+let activeTab = 'agenda', tipoFilter = 'todos', mesFilter = 'todos';
+
+// ══════════════════════════════════════════════════════════
+//  LOGIN / LOGOUT
+// ══════════════════════════════════════════════════════════
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+
+  if (!email || !pass) { showLoginError('Ingresá email y contraseña.'); return; }
+
+  btn.textContent = 'Entrando...'; btn.disabled = true;
+  errEl.style.display = 'none';
+
+  try {
+    await firebaseSignIn(email, pass);
+
+    // Buscar empresa asociada a este email en Firebase
+    const empresaData = await DB.get(`empresas_auth/${sessionStorage.getItem('mudar_uid')}`);
+
+    if (!empresaData) {
+      showLoginError('Este usuario no tiene una empresa asignada. Contactá a Mudar.');
+      btn.textContent = 'Entrar al panel →'; btn.disabled = false;
+      return;
+    }
+
+    currentEmpId = empresaData.id;
+    currentEmp = empresaData;
+
+    document.getElementById('tb-av').textContent = currentEmp.ini;
+    document.getElementById('tb-av').style.background = currentEmp.color;
+    document.getElementById('tb-name').textContent = currentEmp.nombre;
+    document.getElementById('page-login').style.display = 'none';
+    document.getElementById('page-app').style.display = 'block';
+    const today = new Date(); calYear = today.getFullYear(); calMonth = today.getMonth();
+    loadData();
+
+  } catch(err) {
+    const msg = err.message.includes('INVALID_LOGIN_CREDENTIALS') || err.message.includes('INVALID_PASSWORD')
+      ? 'Email o contraseña incorrectos.'
+      : err.message.includes('TOO_MANY_ATTEMPTS')
+      ? 'Demasiados intentos. Esperá unos minutos.'
+      : 'Error al ingresar. Intentá de nuevo.';
+    showLoginError(msg);
+    btn.textContent = 'Entrar al panel →'; btn.disabled = false;
+  }
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('login-error');
+  el.textContent = msg; el.style.display = 'block';
+}
+
+async function doLogout() {
+  if (pollingInterval) { clearInterval(pollingInterval); pollingInterval = null; }
+  if (pollingCountdownInterval) { clearInterval(pollingCountdownInterval); pollingCountdownInterval = null; }
+  if (typeof pedidosIdsVistos !== 'undefined') pedidosIdsVistos.clear();
+  sessionStorage.removeItem('mudar_token');
+  sessionStorage.removeItem('mudar_uid');
+  sessionStorage.removeItem('mudar_refresh');
+  sessionStorage.removeItem('mudar_expiry');
+  authToken = null; authRefreshToken = null; authTokenExpiry = null;
+  document.getElementById('page-app').style.display = 'none';
+  document.getElementById('page-login').style.display = 'flex';
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-pass').value = '';
+  currentEmpId = null; currentEmp = null;
+  pedidos = []; trabajos = []; disponibilidad = {};
+}
+
+// Auto-login si hay token guardado en sesión
+async function tryAutoLogin() {
+  const token = getStoredToken();
+  const uid = sessionStorage.getItem('mudar_uid');
+  if (!token || !uid) return;
+  authToken = token;
+  authRefreshToken = sessionStorage.getItem('mudar_refresh');
+  authTokenExpiry = parseInt(sessionStorage.getItem('mudar_expiry') || '0');
+  try {
+    const empresaData = await DB.get(`empresas_auth/${uid}`);
+    if (!empresaData) return;
+    currentEmpId = empresaData.id;
+    currentEmp = empresaData;
+    document.getElementById('tb-av').textContent = currentEmp.ini;
+    document.getElementById('tb-av').style.background = currentEmp.color;
+    document.getElementById('tb-name').textContent = currentEmp.nombre;
+    document.getElementById('page-login').style.display = 'none';
+    document.getElementById('page-app').style.display = 'block';
+    const today = new Date(); calYear = today.getFullYear(); calMonth = today.getMonth();
+    loadData();
+  } catch(e) { /* token expirado, mostrar login */ }
+}
+
+// Arrancar
+tryAutoLogin();
+
+// ══════════════════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════════════════
+async function loadData() {
+  setSyncStatus('syncing');
+  await Promise.all([loadDisponibilidad(), loadPedidos(), loadTarifasData()]);
+  await loadTrabajos();
+  setSyncStatus('ok');
+  renderCalendar(); renderPedidos(); renderTrabajos(); renderHoy(); updateStatus();
+  // Avisar si falta el número de WhatsApp
+  if (!currentEmp?.wapp && !currentEmp?.whatsapp) {
+    setTimeout(() => showToast('⚠️ Configurá tu WhatsApp en el perfil para recibir alertas de pedidos nuevos'), 2000);
+  }
+  // Arrancar polling de pedidos cada 30 segundos
+  startPedidosPolling();
+}
+
+let pollingInterval = null;
+let pollingCountdown = 30;
+let pollingCountdownInterval = null;
+let pedidosIdsVistos = new Set();
+
+function startPedidosPolling() {
+  if (pollingInterval) clearInterval(pollingInterval);
+  if (pollingCountdownInterval) clearInterval(pollingCountdownInterval);
+  pedidos.forEach(p => pedidosIdsVistos.add(p.id));
+  pollingCountdown = 30;
+  actualizarCountdown();
+  pollingCountdownInterval = setInterval(() => {
+    pollingCountdown--;
+    if (pollingCountdown <= 0) pollingCountdown = 30;
+    actualizarCountdown();
+  }, 1000);
+  pollingInterval = setInterval(async () => {
+    await loadPedidos();
+    await loadTrabajos();
+    const nuevos = pedidos.filter(p => p.estado === 'pendiente' && !pedidosIdsVistos.has(p.id));
+    pedidos.forEach(p => pedidosIdsVistos.add(p.id));
+    renderPedidos(); renderTrabajos(); renderHoy(); updateStatus();
+    if (nuevos.length > 0) {
+      showToast(`🔔 ${nuevos.length === 1 ? 'Nuevo pedido' : nuevos.length+' pedidos nuevos'} — revisá Pedidos`);
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      notificarNuevoPedidoPorWA(nuevos);
+    }
+    pollingCountdown = 30;
+  }, 30000);
+}
+
+function actualizarCountdown() {
+  const el = document.getElementById('sync-countdown');
+  if (el) el.textContent = `· ${pollingCountdown}s`;
+}
+
+function notificarNuevoPedidoPorWA(nuevos) {
+  const waFletero = currentEmp?.wapp || currentEmp?.whatsapp || null;
+  if (!waFletero) return;
+  nuevos.forEach(p => {
+    const fecha = p.fecha ? new Date(p.fecha+'T12:00:00').toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'}) : 'sin fecha';
+    const precio = p.precio ? `$${parseInt(p.precio).toLocaleString('es-AR')}` : 'a confirmar';
+    const cliente = p.clienteNombre || 'Cliente';
+    const msg = `🔔 *Nuevo pedido en Mudar*
+
+👤 *${cliente}*
+📍 ${p.origen||'—'} → ${p.destino||'—'}
+📅 ${fecha}
+🚛 ${p.vehiculoLabel||p.tamano||'—'}
+💰 ${precio}
+
+Respondé rápido — el cliente también pidió presupuesto a otras empresas.
+Entrá al panel: ${window.location.href}`;
+    setTimeout(() => {
+      window.open(`https://wa.me/${waFletero.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`, '_blank');
+    }, 500);
+  });
+}
+
+async function loadDisponibilidad() {
+  disponibilidad = await DB.get(`empresas/${currentEmpId}/disponibilidad`) || {};
+}
+
+async function loadPedidos() {
+  try {
+    const all = await DB.getAll('pedidos') || [];
+    pedidos = all.filter(p => parseInt(p.empresaId) === parseInt(currentEmpId));
+    console.log('[Mudar] Pedidos cargados:', pedidos.length, 'de', all.length, 'totales. EmpId:', currentEmpId);
+  } catch(e) {
+    console.error('[Mudar] Error loadPedidos:', e);
+    pedidos = [];
+  }
+}
+
+async function loadTrabajos() {
+  const all = await DB.getAll('trabajos') || [];
+  trabajos = all.filter(t => parseInt(t.empresaId) === parseInt(currentEmpId));
+  const existingIds = new Set(trabajos.map(t => t.pedidoId).filter(Boolean));
+  pedidos.filter(p => p.estado === 'aceptado' && !existingIds.has(p.id)).forEach(p => {
+    trabajos.push({id:'p_'+p.id, pedidoId:p.id, empresaId:parseInt(currentEmpId), origen:p.origen, destino:p.destino, fecha:p.fecha, precio:p.precio, tipomudanza:p.tipo, tipo:'nomade', timestamp:p.timestamp});
+  });
+  trabajos.sort((a,b) => (a.fecha||'').localeCompare(b.fecha||''));
+}
+
+
+function setSyncStatus(s) {
+  const dot = document.getElementById('sync-dot');
+  const text = document.getElementById('sync-text');
+  if (s === 'syncing') {
+    dot.className = 'sync-dot syncing';
+    text.textContent = 'Sincronizando...';
+  } else {
+    dot.className = 'sync-dot';
+    text.textContent = '● Conectado';
+  }
+}
+
+function updateStatus() {
+  const pending = pedidos.filter(p => p.estado === 'pendiente').length;
+  document.getElementById('tb-status').textContent = pending > 0 ? `${pending} pedido${pending!==1?'s':''} pendiente${pending!==1?'s':''}` : 'Agenda al día ✓';
+  const notif = document.getElementById('notif-dot');
+  notif.classList.toggle('show', pending > 0);
+  const badge = document.getElementById('nav-badge');
+  if (pending > 0) { badge.style.display=''; badge.textContent=pending; }
+  else badge.style.display='none';
+}
+
+// ══════════════════════════════════════════════════════════
+//  CALENDAR
+// ══════════════════════════════════════════════════════════
+function renderCalendar() {
+  const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  document.getElementById('cal-month').textContent = `${MONTHS[calMonth]} ${calYear}`;
+  const today = new Date();
+  const firstDay = (new Date(calYear, calMonth, 1).getDay() + 6) % 7;
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const nomadeDays = new Set(pedidos.filter(p => p.fecha && p.fecha.startsWith(`${calYear}-${String(calMonth+1).padStart(2,'0')}`)).map(p => parseInt(p.fecha.split('-')[2])));
+  let html = '';
+  for (let i=0; i<firstDay; i++) html += '<div class="cal-day empty"></div>';
+  for (let day=1; day<=daysInMonth; day++) {
+    const dk = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const isPast = new Date(calYear,calMonth,day) < new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    const isToday = new Date(calYear,calMonth,day).toDateString() === today.toDateString();
+    const state = disponibilidad[dk] || 'available';
+    const classes = ['cal-day', isPast?'past':state, isToday?'today':'', nomadeDays.has(day)&&!isPast?'has-mudar':'', selectedDay===dk?'selected':''].filter(Boolean).join(' ');
+    html += `<div class="${classes}" onclick="${isPast?'':'selectDay(\''+dk+'\')'}">\
+<span class="day-num">${day}</span><span class="day-dot"></span></div>`;
+  }
+  document.getElementById('cal-grid').innerHTML = html;
+}
+
+function selectDay(dk) {
+  selectedDay = dk;
+  renderCalendar();
+  const [y,m,d] = dk.split('-');
+  const dateStr = new Date(+y,+m-1,+d).toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('day-panel-date').textContent = dateStr.charAt(0).toUpperCase()+dateStr.slice(1);
+  document.getElementById('day-empty').style.display = 'none';
+  document.getElementById('day-detail').style.display = 'block';
+  const state = disponibilidad[dk] || 'available';
+  ['available','limited','busy'].forEach(s => {
+    document.getElementById('sb-'+s).className = 'state-btn' + (state===s ? ' sel-'+s : '');
+  });
+  document.getElementById('state-explanation').style.display = 'none';
+}
+
+async function setDayState(state) {
+  if (!selectedDay) return;
+  setSyncStatus('syncing');
+  disponibilidad[selectedDay] = state;
+  await DB.set(`empresas/${currentEmpId}/disponibilidad`, disponibilidad);
+  ['available','limited','busy'].forEach(s => {
+    document.getElementById('sb-'+s).className = 'state-btn' + (state===s ? ' sel-'+s : '');
+  });
+  const exp = document.getElementById('state-explanation');
+  const msgs = {
+    available:{bg:'var(--green-light)',color:'#14532D',text:'✅ Día libre — Mudar puede mandarte pedidos y aparecés primero en los resultados.'},
+    limited:{bg:'#FEF3C7',color:'#78350F',text:'🟡 "Tengo algo" — Ya tenés un trabajo pero podés sumar otro. Mudar te manda pedidos igual, y el usuario ve que tu agenda está parcialmente ocupada.'},
+    busy:{bg:'var(--red-light)',color:'#7F1D1D',text:'🔴 Ocupado — Agenda completa. Mudar no te manda pedidos ese día.'}
+  };
+  const m = msgs[state];
+  exp.style.display='block'; exp.style.background=m.bg; exp.style.color=m.color; exp.textContent=m.text;
+  renderCalendar();
+  setSyncStatus('ok');
+  showToast({available:'✅ Marcado como libre', limited:'🟡 Tengo algo agendado', busy:'🔴 Ocupado'}[state]);
+}
+
+function prevMonth() { calMonth--; if(calMonth<0){calMonth=11;calYear--;} selectedDay=null; resetDayPanel(); renderCalendar(); }
+function nextMonth() { calMonth++; if(calMonth>11){calMonth=0;calYear++;} selectedDay=null; resetDayPanel(); renderCalendar(); }
+function resetDayPanel() {
+  document.getElementById('day-empty').style.display='';
+  document.getElementById('day-detail').style.display='none';
+}
+
+// ══════════════════════════════════════════════════════════
+//  PEDIDOS
+// ══════════════════════════════════════════════════════════
+let pedidoFilter = 'todos';
+
+function setPedidoFilter(f) {
+  pedidoFilter = f;
+  ['todos','pendiente','aceptado','rechazado'].forEach(x => {
+    document.getElementById('pf-'+x)?.classList.toggle('active', x===f);
+  });
+  renderPedidos();
+}
+
+function sortPedidos(list) {
+  const sort = document.getElementById('pedido-sort')?.value || 'reciente';
+  return [...list].sort((a,b) => {
+    if (sort === 'fecha-asc') return (a.fecha||'').localeCompare(b.fecha||'');
+    if (sort === 'fecha-desc') return (b.fecha||'').localeCompare(a.fecha||'');
+    return (b.timestamp||'').localeCompare(a.timestamp||''); // reciente
+  });
+}
+
+function renderPedidos() {
+  const el = document.getElementById('pedidos-content');
+  if (!el) return;
+
+  let filtered = pedidos;
+  if (pedidoFilter !== 'todos') filtered = pedidos.filter(p => p.estado === pedidoFilter);
+  filtered = sortPedidos(filtered);
+
+  if (pedidos.length === 0) {
+    el.innerHTML = `<div class="empty-state"><div class="icon">📥</div><h3>Sin pedidos todavía</h3><p>Cuando un cliente te solicite desde Mudar, aparece acá.</p></div>`;
+    updateStatus(); return;
+  }
+  if (filtered.length === 0) {
+    el.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><h3>Sin resultados</h3><p>No hay pedidos con ese filtro.</p></div>`;
+    updateStatus(); return;
+  }
+
+  const pendientes  = filtered.filter(p => p.estado === 'pendiente');
+  const aceptados   = filtered.filter(p => p.estado === 'aceptado');
+  const rechazados  = filtered.filter(p => p.estado === 'rechazado');
+
+  let html = '';
+  if (pedidoFilter === 'todos') {
+    if (pendientes.length)  html += `<div class="section-header"><div class="section-label">🔔 Esperan tu respuesta (${pendientes.length})</div></div><div class="pedidos-grid">${pendientes.map(cardPendiente).join('')}</div>`;
+    if (aceptados.length)   html += `<div class="section-header" style="margin-top:20px;"><div class="section-label">✅ Aceptados (${aceptados.length})</div></div><div class="pedidos-grid">${aceptados.map(cardRespondido).join('')}</div>`;
+    if (rechazados.length)  html += `<div class="section-header" style="margin-top:20px;"><div class="section-label">✕ Rechazados (${rechazados.length})</div></div><div class="pedidos-grid">${rechazados.map(cardRespondido).join('')}</div>`;
+  } else if (pedidoFilter === 'pendiente') {
+    html += `<div class="pedidos-grid">${filtered.map(cardPendiente).join('')}</div>`;
+  } else {
+    html += `<div class="pedidos-grid">${filtered.map(cardRespondido).join('')}</div>`;
+  }
+
+  el.innerHTML = html;
+  updateStatus();
+}
+
+
+// ══════════════════════════════════════════════════════════
+//  ESTIMACIÓN DE RUTA (sin API)
+//  Coordenadas reales de barrios/localidades CABA + GBA
+//  Distancia Haversine × factor urbano → km y tiempo real
+// ══════════════════════════════════════════════════════════
+const COORDS = {
+  // CABA
+  'agronomía':[-34.6083,-58.4767],'almagro':[-34.6160,-58.4186],'balvanera':[-34.6175,-58.4075],
+  'barracas':[-34.6450,-58.3800],'belgrano':[-34.5617,-58.4583],'boedo':[-34.6317,-58.4150],
+  'caballito':[-34.6183,-58.4417],'chacarita':[-34.5883,-58.4550],'coghlan':[-34.5617,-58.4817],
+  'colegiales':[-34.5750,-58.4467],'constitución':[-34.6283,-58.3883],'flores':[-34.6333,-58.4617],
+  'floresta':[-34.6317,-58.4783],'la boca':[-34.6367,-58.3633],'liniers':[-34.6450,-58.5233],
+  'mataderos':[-34.6617,-58.5083],'montserrat':[-34.6133,-58.3817],'nueva pompeya':[-34.6550,-58.4100],
+  'núñez':[-34.5450,-58.4583],'palermo':[-34.5883,-58.4233],'recoleta':[-34.5883,-58.3933],
+  'retiro':[-34.5883,-58.3733],'saavedra':[-34.5550,-58.4817],'san cristóbal':[-34.6267,-58.4017],
+  'san nicolás':[-34.6017,-58.3817],'san telmo':[-34.6217,-58.3717],'villa crespo':[-34.5983,-58.4417],
+  'villa del parque':[-34.6017,-58.4817],'villa devoto':[-34.5983,-58.5033],'villa lugano':[-34.6750,-58.4783],
+  'villa urquiza':[-34.5717,-58.4900],
+  // GBA Norte
+  'san isidro':[-34.4717,-58.5267],'vicente lópez':[-34.5267,-58.4783],'tigre':[-34.4267,-58.5800],
+  'san martín':[-34.5717,-58.5383],'escobar':[-34.3533,-58.7933],'pilar':[-34.4583,-58.9133],
+  // GBA Sur
+  'avellaneda':[-34.6617,-58.3650],'lanús':[-34.7017,-58.3883],'lomas de zamora':[-34.7617,-58.3983],
+  'quilmes':[-34.7200,-58.2533],'almirante brown':[-34.8150,-58.3900],'berazategui':[-34.7633,-58.2117],
+  // GBA Oeste
+  'morón':[-34.6533,-58.6217],'ituzaingó':[-34.6583,-58.6717],'hurlingham':[-34.5883,-58.6417],
+  'merlo':[-34.6683,-58.7283],'moreno':[-34.6383,-58.7900]
+};
+
+
+// ══════════════════════════════════════════════════════════
+//  CÁLCULO DE DISTANCIA Y TIEMPO — Modelo mejorado
+//  Factor ruta: 1.5x CABA-CABA | 1.4x mixto | 1.3x GBA-GBA
+//  Velocidad:   18 km/h CABA   | 28 km/h mixto | 35 km/h GBA
+//  + 45 min fijos carga/descarga
+//  + 10 min por piso sin ascensor
+// ══════════════════════════════════════════════════════════
+
+const ZONA_CABA = new Set([
+  'agronomía','almagro','balvanera','barracas','belgrano','boedo','caballito',
+  'chacarita','coghlan','colegiales','constitución','flores','floresta','la boca',
+  'liniers','mataderos','montserrat','nueva pompeya','núñez','palermo','recoleta',
+  'retiro','saavedra','san cristóbal','san nicolás','san telmo','villa crespo',
+  'villa del parque','villa devoto','villa lugano','villa urquiza'
+]);
+
+function esCABA(loc) { return ZONA_CABA.has((loc||'').toLowerCase().split(',')[0].trim()); }
+
+function modeloTiempo({ km, origenCABA, destinoCABA, pisosOrigen=0, pisosDestino=0, ascensorOrigen=true, ascensorDestino=true }) {
+  const velocidad = (origenCABA && destinoCABA) ? 18 : (!origenCABA && !destinoCABA) ? 35 : 28;
+  let mins = Math.round((km / velocidad) * 60) + 45;
+  if (!ascensorOrigen  && pisosOrigen  > 0) mins += pisosOrigen  * 10;
+  if (!ascensorDestino && pisosDestino > 0) mins += pisosDestino * 10;
+  const h = Math.floor(mins/60), m = mins%60;
+  return { mins, hs: h > 0 ? `${h}h${m > 0 ? m+'min':''}` : `${m}min` };
+}
+
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function estimarRuta(origen, destino, opts={}) {
+  if (!origen || !destino) return null;
+  const limpiar = s => s.split(',')[0].trim().toLowerCase();
+  const ok = COORDS[limpiar(origen)];
+  const dk = COORDS[limpiar(destino)];
+  if (!ok || !dk) return null;
+  const oC = esCABA(origen), dC = esCABA(destino);
+  const factor = (oC && dC) ? 1.5 : (!oC && !dC) ? 1.3 : 1.4;
+  const km = Math.round(haversineKm(ok[0],ok[1],dk[0],dk[1]) * factor);
+  const { hs } = modeloTiempo({ km, origenCABA: oC, destinoCABA: dC, ...opts });
+  return { km, hs };
+}
+
+function calcDistanciaExacta(lat1, lon1, lat2, lon2, opts={}) {
+  const R = 6371;
+  const dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  const distLineal = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  // Detectar zona por bounding box de CABA
+  const enCABA = (lat, lon) => lat > -34.71 && lat < -34.52 && lon > -58.54 && lon < -58.33;
+  const oC = enCABA(lat1, lon1), dC = enCABA(lat2, lon2);
+  const factor = (oC && dC) ? 1.5 : (!oC && !dC) ? 1.3 : 1.4;
+  const km = Math.round(distLineal * factor);
+  const { hs } = modeloTiempo({ km, origenCABA: oC, destinoCABA: dC, ...opts });
+  return { km, hs };
+}
+
+
+function cardPendiente(p) {
+  const fechaStr = p.fecha ? new Date(p.fecha+'T12:00:00').toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'}) : '—';
+  const FRANJA = {manana:'🌅 Mañana (8–12 hs)', tarde:'🌆 Tarde (14–18 hs)', indistinto:'🤷 Indistinto'};
+  const SERVICIO = {basico:'Solo traslado', embalaje:'Con embalaje', desarme:'Con desarme y armado', todo:'Todo incluido'};
+  const TIPO_PROP = {depto:'Departamento', casa:'Casa', ph:'PH', oficina:'Oficina', bc:'Barrio Cerrado'};
+
+  const vehiculo = p.vehiculoLabel || p.tamanoLabel || p.tipo || p.tamano || '—';
+  const franja = FRANJA[p.franja] || p.franja || null;
+  const servicio = SERVICIO[p.servicio] || p.servicio || null;
+  const objetos = Array.isArray(p.objetos) && p.objetos.length ? p.objetos.join(', ') : null;
+  const notas = p.notas || null;
+  const cliente = p.clienteNombre ? (p.clienteNombre + (p.clienteApellido ? ' '+p.clienteApellido : '')) : null;
+
+  // Detalles origen
+  const origenDetalles = [];
+  if (p.origenTipo) origenDetalles.push(TIPO_PROP[p.origenTipo]||p.origenTipo);
+  if (p.origenTipo === 'bc' && (p.origenCountry || p.origenLote)) origenDetalles.push((p.origenCountry||'') + (p.origenLote ? ' · Lote '+p.origenLote : ''));
+  if (p.origenPiso) origenDetalles.push('Piso '+p.origenPiso+(p.origenDepto||''));
+  if (p.origenPiso) origenDetalles.push(p.origenAscensor ? 'Con ascensor' : 'Sin ascensor');
+  if (p.escaleras) origenDetalles.push('Con escaleras');
+
+  // Detalles destino
+  const destinoDetalles = [];
+  if (p.destinoTipo) destinoDetalles.push(TIPO_PROP[p.destinoTipo]||p.destinoTipo);
+  if (p.destinoTipo === 'bc' && (p.destinoCountry || p.destinoLote)) destinoDetalles.push((p.destinoCountry||'') + (p.destinoLote ? ' · Lote '+p.destinoLote : ''));
+  if (p.destinoPiso) destinoDetalles.push('Piso '+p.destinoPiso+(p.destinoDepto||''));
+  if (p.destinoPiso) destinoDetalles.push(p.destinoAscensor ? 'Con ascensor' : 'Sin ascensor');
+
+  return `<div class="pedido-card nomade-card">
+    <div class="pedido-header"><span class="pedido-source">🟠 Mudar · Nuevo pedido</span><span class="pedido-time">${getTimeAgo(p.timestamp)}</span></div>
+    <div class="pedido-body">
+      <div class="pedido-route">
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <span class="pedido-route-from">📍 ${p.origen||'—'}</span>
+          ${origenDetalles.length ? `<span style="font-size:11px;color:var(--gray);padding-left:18px;">${origenDetalles.join(' · ')}</span>` : ''}
+        </div>
+        <span class="pedido-route-arrow">→</span>
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <span class="pedido-route-to">🏁 ${p.destino||'—'}</span>
+          ${destinoDetalles.length ? `<span style="font-size:11px;color:var(--gray);padding-left:18px;">${destinoDetalles.join(' · ')}</span>` : ''}
+        </div>
+      </div>
+      ${(()=>{const r=estimarRuta(p.origen,p.destino);return r?`<div style="display:flex;align-items:center;gap:8px;background:#EFF6FF;border-radius:10px;padding:7px 12px;margin-bottom:8px;font-size:12px;font-weight:600;color:#1E40AF;">🗺️ <span>${r.km} km</span></div>`:''})()}
+      <div class="pedido-chips">
+        <span class="pedido-chip">📅 ${fechaStr}</span>
+        ${franja ? `<span class="pedido-chip">🕐 ${franja}</span>` : ''}
+        <span class="pedido-chip">🚛 ${vehiculo}</span>
+        ${servicio ? `<span class="pedido-chip">🔧 ${servicio}</span>` : ''}
+        ${objetos ? `<span class="pedido-chip">⚠️ ${objetos}</span>` : ''}
+      </div>
+      ${notas ? `<div style="background:#FEF3C7;border-radius:8px;padding:7px 10px;font-size:12px;color:#78350F;margin-bottom:6px;">💬 <strong>Nota:</strong> ${notas}</div>` : ''}
+      ${cliente ? `<div style="font-size:12px;color:var(--gray);margin-bottom:4px;">👤 <strong>${cliente}</strong>${p.clienteWapp ? ' · '+p.clienteWapp : ''}</div>` : ''}
+      <div class="pedido-price">$${(p.precio||0).toLocaleString('es-AR')}</div>
+    </div>
+    <div class="pedido-actions">
+      <button class="pedido-btn accept" onclick="respondPedido('${p.id}','aceptado')">✓ Aceptar</button>
+      <button class="pedido-btn reject" onclick="respondPedido('${p.id}','rechazado')">✕ Rechazar</button>
+    </div>
+  </div>`;
+}
+
+function cardRespondido(p) {
+  const fechaStr = p.fecha ? new Date(p.fecha+'T12:00:00').toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'}) : '—';
+  const FRANJA = {manana:'🌅 Mañana (8–12 hs)', tarde:'🌆 Tarde (14–18 hs)', indistinto:'🤷 Indistinto'};
+  const SERVICIO = {basico:'Solo traslado', embalaje:'Con embalaje', desarme:'Con desarme y armado', todo:'Todo incluido'};
+  const TIPO_PROP = {depto:'Departamento', casa:'Casa', ph:'PH', oficina:'Oficina', bc:'Barrio Cerrado'};
+  const vehiculo = p.vehiculoLabel || p.tamanoLabel || p.tipo || p.tamano || '—';
+  const franja = FRANJA[p.franja] || p.franja || null;
+  const servicio = SERVICIO[p.servicio] || p.servicio || null;
+  const objetos = Array.isArray(p.objetos) && p.objetos.length ? p.objetos.join(', ') : null;
+  const notas = p.notas || null;
+  const cliente = p.clienteNombre ? (p.clienteNombre + (p.clienteApellido ? ' '+p.clienteApellido : '')) : null;
+  const origenDetalles = [];
+  if (p.origenTipo) origenDetalles.push(TIPO_PROP[p.origenTipo]||p.origenTipo);
+  if (p.origenTipo === 'bc' && (p.origenCountry || p.origenLote)) origenDetalles.push((p.origenCountry||'') + (p.origenLote ? ' · Lote '+p.origenLote : ''));
+  if (p.origenPiso) origenDetalles.push('Piso '+p.origenPiso+(p.origenDepto||''));
+  if (p.origenPiso) origenDetalles.push(p.origenAscensor ? 'Con ascensor' : 'Sin ascensor');
+  if (p.escaleras) origenDetalles.push('Con escaleras');
+  const destinoDetalles = [];
+  if (p.destinoTipo) destinoDetalles.push(TIPO_PROP[p.destinoTipo]||p.destinoTipo);
+  if (p.destinoTipo === 'bc' && (p.destinoCountry || p.destinoLote)) destinoDetalles.push((p.destinoCountry||'') + (p.destinoLote ? ' · Lote '+p.destinoLote : ''));
+  if (p.destinoPiso) destinoDetalles.push('Piso '+p.destinoPiso+(p.destinoDepto||''));
+  if (p.destinoPiso) destinoDetalles.push(p.destinoAscensor ? 'Con ascensor' : 'Sin ascensor');
+  const isAcep = p.estado === 'aceptado';
+  const waLink = isAcep ? generarLinkWA(p) : '';
+  return `<div class="pedido-card nomade-card" style="opacity:${isAcep?'1':'0.55'};">
+    <div class="pedido-header"><span class="pedido-source">🟠 Mudar</span><span class="pedido-time">${getTimeAgo(p.timestamp)}</span></div>
+    <div class="pedido-body">
+      <div class="pedido-route">
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <span class="pedido-route-from">📍 ${p.origen||'—'}</span>
+          ${origenDetalles.length ? `<span style="font-size:11px;color:var(--gray);padding-left:18px;">${origenDetalles.join(' · ')}</span>` : ''}
+        </div>
+        <span class="pedido-route-arrow">→</span>
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <span class="pedido-route-to">🏁 ${p.destino||'—'}</span>
+          ${destinoDetalles.length ? `<span style="font-size:11px;color:var(--gray);padding-left:18px;">${destinoDetalles.join(' · ')}</span>` : ''}
+        </div>
+      </div>
+      ${(()=>{const r=estimarRuta(p.origen,p.destino);return r?`<div style="display:flex;align-items:center;gap:8px;background:#EFF6FF;border-radius:10px;padding:7px 12px;margin-bottom:8px;font-size:12px;font-weight:600;color:#1E40AF;">🗺️ <span>${r.km} km</span></div>`:''})()}
+      <div class="pedido-chips">
+        <span class="pedido-chip">📅 ${fechaStr}</span>
+        ${franja ? `<span class="pedido-chip">🕐 ${franja}</span>` : ''}
+        <span class="pedido-chip">🚛 ${vehiculo}</span>
+        ${servicio ? `<span class="pedido-chip">🔧 ${servicio}</span>` : ''}
+        ${objetos ? `<span class="pedido-chip">⚠️ ${objetos}</span>` : ''}
+      </div>
+      ${notas ? `<div style="background:#FEF3C7;border-radius:8px;padding:7px 10px;font-size:12px;color:#78350F;margin-bottom:6px;">💬 <strong>Nota:</strong> ${notas}</div>` : ''}
+      ${cliente ? `<div style="font-size:12px;color:var(--gray);margin-bottom:4px;">👤 <strong>${cliente}</strong>${p.clienteWapp ? ' · '+p.clienteWapp : ''}</div>` : ''}
+      <div class="pedido-price">$${(p.precio||0).toLocaleString('es-AR')}</div>
+    </div>
+    ${isAcep
+      ? `<div class="pedido-status aceptado"><span>✅ Aceptado</span><a href="${waLink}" target="_blank" class="wa-btn">📲 WhatsApp</a></div>`
+      : `<div class="pedido-status rechazado">✕ Rechazado</div>`
+    }
+  </div>`;
+}
+
+function generarLinkWA(p) {
+  const num = p.clienteWapp ? p.clienteWapp.replace(/\D/g,'') : '';
+  const fecha = p.fecha ? new Date(p.fecha+'T12:00:00').toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'}) : '—';
+  const msg = `¡Hola! 👋 Soy de *${currentEmp?.nombre||'la empresa'}* a través de *Mudar*.\n\nTe confirmo que podemos hacer tu mudanza de *${p.origen}* a *${p.destino}* el *${fecha}*.\n\n¿Podemos coordinar los detalles? Precio estimado: $${(p.precio||0).toLocaleString('es-AR')}.`;
+  return num ? `https://wa.me/549${num}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+}
+
+async function respondPedido(pedidoId, respuesta) {
+  if (respuesta === 'rechazado') {
+    const ok = window.confirm('¿Seguro que querés rechazar este pedido? Esta acción no se puede deshacer.');
+    if (!ok) return;
+  }
+  setSyncStatus('syncing');
+  const pedido = pedidos.find(p => p.id === pedidoId);
+  if (!pedido) return;
+  pedido.estado = respuesta;
+  const allP = await DB.get('pedidos') || {};
+  allP[pedidoId] = pedido;
+  await DB.set('pedidos', allP);
+  if (respuesta === 'aceptado' && pedido.fecha) {
+    disponibilidad[pedido.fecha] = 'limited';
+    await DB.set(`empresas/${currentEmpId}/disponibilidad`, disponibilidad);
+    await loadTrabajos(); renderTrabajos();
+    showToast('✅ Aceptado — día marcado como parcialmente ocupado');
+    setTimeout(() => window.open(generarLinkWA(pedido), '_blank'), 600);
+  } else {
+    showToast('✕ Pedido rechazado');
+  }
+  setSyncStatus('ok'); renderPedidos(); renderCalendar();
+}
+
+async function refreshPedidos() {
+  setSyncStatus('syncing'); await loadPedidos(); renderPedidos(); setSyncStatus('ok'); showToast('↻ Pedidos actualizados');
+}
+
+// ══════════════════════════════════════════════════════════
+//  TRABAJOS
+// ══════════════════════════════════════════════════════════
+function setTipoFilter(t) {
+  tipoFilter = t;
+  ['todos','nomade','propio','realizado'].forEach(x => {
+    const el = document.getElementById('tf-'+x);
+    if (el) el.classList.toggle('active', x===t);
+  });
+  renderTrabajos();
+}
+function setMesFilter(m) {
+  mesFilter = m;
+  renderTrabajos();
+  document.querySelectorAll('.month-pill').forEach(b => {
+    b.style.background = b.dataset.mes===m ? 'var(--dark)' : 'white';
+    b.style.color = b.dataset.mes===m ? 'white' : 'var(--gray)';
+    b.style.borderColor = b.dataset.mes===m ? 'var(--dark)' : 'var(--border)';
+  });
+}
+
+function renderTrabajos() {
+  const all = [...trabajos];
+  const today = new Date().toISOString().split('T')[0];
+
+  // Separar pasados (realizados) de próximos/activos
+  const realizados = all.filter(t => t.fecha && t.fecha < today);
+  const proximos   = all.filter(t => !t.fecha || t.fecha >= today);
+
+  const nomC  = all.filter(t=>t.tipo==='nomade').length;
+  const proC  = all.filter(t=>t.tipo==='propio').length;
+  const totalIngresos = all.reduce((s,t)=>s+(parseInt(t.precio)||0),0);
+  document.getElementById('trabajos-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-num" style="color:var(--orange)">${nomC}</div><div class="stat-label">Mudar</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--green)">${proC}</div><div class="stat-label">Propios</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--dark);font-size:18px;">$${totalIngresos>0?(totalIngresos/1000).toFixed(0)+'K':'0'}</div><div class="stat-label">Total</div></div>`;
+
+  // Pool según filtro
+  let pool;
+  if (tipoFilter === 'realizado') {
+    pool = realizados;
+  } else {
+    // Por defecto: solo próximos/activos (no pasados)
+    pool = proximos;
+    if (tipoFilter === 'nomade') pool = pool.filter(t=>t.tipo==='nomade');
+    if (tipoFilter === 'propio') pool = pool.filter(t=>t.tipo==='propio');
+  }
+
+  const meses = [...new Set(all.map(t=>(t.fecha||'').slice(0,7)).filter(Boolean))].sort();
+  const MN = {'01':'Ene','02':'Feb','03':'Mar','04':'Abr','05':'May','06':'Jun','07':'Jul','08':'Ago','09':'Sep','10':'Oct','11':'Nov','12':'Dic'};
+  document.getElementById('month-filters').innerHTML = ['todos',...meses].map(m => {
+    const lbl = m==='todos' ? 'Todos' : (MN[m.split('-')[1]]||m)+' '+m.split('-')[0].slice(2);
+    const isA = mesFilter===m;
+    return `<button class="filter-pill month-pill${isA?' active':''}" data-mes="${m}" onclick="setMesFilter('${m}')"
+      style="${isA?'background:var(--dark);color:white;border-color:var(--dark);':''}">${lbl}</button>`;
+  }).join('');
+
+  let filtered = [...pool].sort((a,b)=>(a.fecha||'').localeCompare(b.fecha||''));
+  if (mesFilter!=='todos') filtered = filtered.filter(t=>(t.fecha||'').startsWith(mesFilter));
+
+  const el = document.getElementById('trabajos-list');
+  if (filtered.length===0) { el.innerHTML=`<div class="empty-state"><div class="icon">🔍</div><h3>Sin resultados</h3><p>Probá cambiar los filtros.</p></div>`; return; }
+
+  const byMonth = {};
+  filtered.forEach(t => { const mes=(t.fecha||'????-??').slice(0,7); const dia=t.fecha||'????'; if(!byMonth[mes])byMonth[mes]={}; if(!byMonth[mes][dia])byMonth[mes][dia]=[]; byMonth[mes][dia].push(t); });
+  const ME=['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  let html='';
+  Object.keys(byMonth).sort().forEach(mes=>{
+    const [yr,mo]=mes.split('-');
+    if(mesFilter==='todos'&&meses.length>1) html+=`<div class="month-header">${ME[parseInt(mo)]} ${yr}</div>`;
+    Object.keys(byMonth[mes]).sort().forEach(dia=>{
+      const items=byMonth[mes][dia];
+      const date=new Date(dia+'T12:00:00');
+      const isPast=dia<today;
+      const dn=date.toLocaleDateString('es-AR',{weekday:'long'}); const dd=date.getDate(); const dm=date.toLocaleString('es-AR',{month:'short'}).toUpperCase();
+      html+=`<div class="day-group"><div class="day-group-header"><span class="day-group-label">${dn.charAt(0).toUpperCase()+dn.slice(1)} ${dd} ${dm}</span>${items.length>1?`<span class="day-group-count">${items.length} trabajos</span>`:''}<div class="day-group-line"></div></div><div class="day-group-cards">`;
+      items.forEach(t=>{
+        const isN=t.tipo==='nomade';
+        const pedidoOrigen = isN ? pedidos.find(p => p.id === t.pedidoId) : null;
+        const vehiculo = pedidoOrigen?.vehiculoLabel || pedidoOrigen?.tamano || t.tipomudanza || null;
+        const clienteNombre = pedidoOrigen?.clienteNombre || null;
+        const clienteWapp = pedidoOrigen?.clienteWapp || null;
+        const notas = pedidoOrigen?.notas || null;
+        const franja = pedidoOrigen?.franja ? {manana:'🌅 Mañana (8–12 hs)',tarde:'🌆 Tarde (14–18 hs)',indistinto:'🤷 Indistinto'}[pedidoOrigen.franja]||pedidoOrigen.franja : null;
+        const TIPO_PROP = {depto:'Departamento',casa:'Casa',ph:'PH',oficina:'Oficina',bc:'Barrio Cerrado'};
+        const origenDet = [];
+        if (pedidoOrigen?.origenTipo) origenDet.push(TIPO_PROP[pedidoOrigen.origenTipo]||pedidoOrigen.origenTipo);
+        if (pedidoOrigen?.origenTipo === 'bc' && (pedidoOrigen?.origenCountry || pedidoOrigen?.origenLote)) origenDet.push((pedidoOrigen.origenCountry||'') + (pedidoOrigen.origenLote ? ' · Lote '+pedidoOrigen.origenLote : ''));
+        if (pedidoOrigen?.origenPiso) origenDet.push('Piso '+pedidoOrigen.origenPiso+(pedidoOrigen.origenDepto||''));
+        if (pedidoOrigen?.origenPiso) origenDet.push(pedidoOrigen.origenAscensor?'Con ascensor':'Sin ascensor');
+        if (pedidoOrigen?.escaleras) origenDet.push('Con escaleras');
+        const destDet = [];
+        if (pedidoOrigen?.destinoTipo) destDet.push(TIPO_PROP[pedidoOrigen.destinoTipo]||pedidoOrigen.destinoTipo);
+        if (pedidoOrigen?.destinoTipo === 'bc' && (pedidoOrigen?.destinoCountry || pedidoOrigen?.destinoLote)) destDet.push((pedidoOrigen.destinoCountry||'') + (pedidoOrigen.destinoLote ? ' · Lote '+pedidoOrigen.destinoLote : ''));
+        if (pedidoOrigen?.destinoPiso) destDet.push('Piso '+pedidoOrigen.destinoPiso+(pedidoOrigen.destinoDepto||''));
+        if (pedidoOrigen?.destinoPiso) destDet.push(pedidoOrigen.destinoAscensor?'Con ascensor':'Sin ascensor');
+        html+=`<div class="trabajo-card ${isN?'nomade-card':'propio-card'} ${isPast?'past-card':''}">
+          <div class="tc-info">
+            <div class="tc-route">${t.origen||'—'} → ${t.destino||'—'}</div>
+            <div class="tc-meta" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">
+              ${vehiculo ? `<span style="background:var(--bg);border-radius:50px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--gray);">🚛 ${vehiculo}</span>` : ''}
+              ${franja ? `<span style="background:var(--bg);border-radius:50px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--gray);">${franja}</span>` : ''}
+              ${origenDet.length ? `<span style="background:var(--bg);border-radius:50px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--gray);">📍 ${origenDet.join(' · ')}</span>` : ''}
+              ${destDet.length ? `<span style="background:var(--bg);border-radius:50px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--gray);">🏁 ${destDet.join(' · ')}</span>` : ''}
+              ${clienteNombre ? `<span style="background:var(--bg);border-radius:50px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--gray);">👤 ${clienteNombre}${clienteWapp?' · '+clienteWapp:''}</span>` : ''}
+              ${notas ? `<span style="background:#FEF3C7;border-radius:50px;padding:2px 8px;font-size:10px;font-weight:600;color:#78350F;">💬 ${notas}</span>` : ''}
+              ${!isN && t.origenDir ? `<span style="background:var(--bg);border-radius:50px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--gray);">📍 ${t.origenDir}</span>` : ''}
+              ${!isN && t.destinoDir ? `<span style="background:var(--bg);border-radius:50px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--gray);">🏁 ${t.destinoDir}</span>` : ''}
+              ${!isN && t.camion ? `<span style="background:var(--bg);border-radius:50px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--gray);">🚛 ${t.camion}</span>` : ''}
+              ${!isN && t.horario ? `<span style="background:var(--bg);border-radius:50px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--gray);">🌅 ${t.horario}</span>` : ''}
+              ${!isN && t.origenTipo ? `<span style="background:var(--bg);border-radius:50px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--gray);">📍 ${t.origenTipo}${t.origenPiso?' · '+t.origenPiso:''}${t.origenAscensor?' · Con ascensor':''}</span>` : ''}
+              ${!isN && t.destinoTipo ? `<span style="background:var(--bg);border-radius:50px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--gray);">🏁 ${t.destinoTipo}${t.destinoPiso?' · '+t.destinoPiso:''}${t.destinoAscensor?' · Con ascensor':''}</span>` : ''}
+              ${!isN && t.clienteNombre ? `<span style="background:var(--bg);border-radius:50px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--gray);">👤 ${t.clienteNombre}${t.clienteTel?' · '+t.clienteTel:''}</span>` : ''}
+              ${!isN && t.notas ? `<span style="background:#FEF3C7;border-radius:50px;padding:2px 8px;font-size:10px;font-weight:600;color:#78350F;">💬 ${t.notas}</span>` : ''}
+              ${!isN && !t.camion && !t.clienteNombre ? '<span style="font-size:10px;color:var(--gray);">👤 Trabajo propio</span>' : ''}
+            </div>
+          </div>
+          <div class="tc-right"><div class="tc-precio">${t.precio?'$'+parseInt(t.precio).toLocaleString('es-AR'):'—'}</div><span class="tc-tipo ${t.tipo}">${isN?'Mudar':'Propio'}</span></div>
+        </div>`;
+      });
+      html+=`</div></div>`;
+    });
+  });
+  el.innerHTML=html;
+}
+
+async function addTrabajo() {
+  const o = document.getElementById('add-origen').value.trim();
+  const d = document.getElementById('add-destino').value.trim();
+  const f = document.getElementById('add-fecha').value;
+  const p = parseInt(document.getElementById('add-precio').value)||0;
+  if(!o||!d||!f){showToast('⚠️ Completá origen, destino y fecha');return;}
+
+  const trabajo = {
+    empresaId: currentEmpId,
+    origen: o,
+    destino: d,
+    origenDir:     document.getElementById('add-origen-dir').value.trim(),
+    origenNum:     document.getElementById('add-origen-num').value.trim(),
+    destinoDir:    document.getElementById('add-destino-dir').value.trim(),
+    destinoNum:    document.getElementById('add-destino-num').value.trim(),
+    fecha: f,
+    precio: p,
+    tipo: 'propio',
+    timestamp: new Date().toISOString(),
+    origenTipo:    document.getElementById('add-origen-tipo').value,
+    origenPiso:    document.getElementById('add-origen-piso').value.trim(),
+    origenAscensor:document.getElementById('add-origen-ascensor').checked,
+    destinoTipo:   document.getElementById('add-destino-tipo').value,
+    destinoPiso:   document.getElementById('add-destino-piso').value.trim(),
+    destinoAscensor:document.getElementById('add-destino-ascensor').checked,
+    camion:        document.getElementById('add-camion').value,
+    horario:       document.getElementById('add-horario').value,
+    clienteNombre: document.getElementById('add-cliente-nombre').value.trim(),
+    clienteTel:    document.getElementById('add-cliente-tel').value.trim(),
+    notas:         document.getElementById('add-notas').value.trim(),
+  };
+
+  setSyncStatus('syncing');
+  await DB.push('trabajos', trabajo);
+  disponibilidad[f] = 'limited'; // trabajo propio = "tengo algo", no bloqueado
+  await DB.set(`empresas/${currentEmpId}/disponibilidad`, disponibilidad);
+
+  // Limpiar formulario
+  ['add-origen','add-destino','add-origen-dir','add-destino-dir','add-origen-num','add-destino-num','add-origen-piso','add-destino-piso',
+   'add-cliente-nombre','add-cliente-tel','add-notas','add-precio'].forEach(id => document.getElementById(id).value='');
+  ['add-origen-tipo','add-destino-tipo','add-camion','add-horario'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('add-origen-ascensor').checked = false;
+  document.getElementById('add-destino-ascensor').checked = false;
+  document.getElementById('add-fecha').value = '';
+
+  await loadTrabajos(); setSyncStatus('ok'); renderTrabajos(); renderCalendar();
+  showToast('✅ Trabajo guardado — día bloqueado');
+}
+
+// ══════════════════════════════════════════════════════════
+//  NAVIGATION & UTILS
+// ══════════════════════════════════════════════════════════
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const isOpen = sidebar.classList.contains('open');
+  sidebar.classList.toggle('open', !isOpen);
+  overlay.classList.toggle('show', !isOpen);
+}
+
+function closeSidebarMobile() {
+  if (window.innerWidth <= 768) {
+    document.querySelector('.sidebar')?.classList.remove('open');
+    document.getElementById('sidebar-overlay')?.classList.remove('show');
+  }
+}
+
+function switchTab(tab) {
+  activeTab = tab;
+  ['hoy','agenda','pedidos','trabajos','tarifas','cotizador'].forEach(t => {
+    document.getElementById('tab-'+t)?.classList.toggle('active', t===tab);
+    document.getElementById('nav-'+t)?.classList.toggle('active', t===tab);
+  });
+  if (tab === 'hoy') renderHoy();
+  if (tab === 'tarifas') loadTarifasUI();
+  if (tab === 'cotizador') loadCotizadorUI();
+  closeSidebarMobile();
+}
+
+function cardHoyTrabajo(t) {
+  const isN = t.tipo === 'nomade';
+  const p = isN ? pedidos.find(x => x.id === t.pedidoId) : null;
+  const FRANJA = {manana:'🌅 Mañana (8–12 hs)', tarde:'🌆 Tarde (14–18 hs)', indistinto:'🤷 Indistinto'};
+  const SERVICIO = {basico:'Solo traslado', embalaje:'Con embalaje', desarme:'Con desarme y armado', todo:'Todo incluido'};
+  const TIPO_PROP = {depto:'Departamento', casa:'Casa', ph:'PH', oficina:'Oficina', bc:'Barrio Cerrado'};
+  const vehiculo = p?.vehiculoLabel || p?.tamano || t.tipomudanza || null;
+  const franja = p ? (FRANJA[p.franja] || p.franja) : null;
+  const servicio = p ? (SERVICIO[p.servicio] || p.servicio) : null;
+  const origenDetalles = [];
+  if (p?.origenTipo) origenDetalles.push(TIPO_PROP[p.origenTipo]||p.origenTipo);
+  if (p?.origenTipo === 'bc' && (p?.origenCountry || p?.origenLote)) origenDetalles.push((p.origenCountry||'') + (p.origenLote ? ' · Lote '+p.origenLote : ''));
+  if (p?.origenPiso) origenDetalles.push('Piso '+p.origenPiso+(p.origenDepto||''));
+  if (p?.origenPiso) origenDetalles.push(p.origenAscensor ? 'Con ascensor' : 'Sin ascensor');
+  if (p?.escaleras) origenDetalles.push('Con escaleras');
+  const destinoDetalles = [];
+  if (p?.destinoTipo) destinoDetalles.push(TIPO_PROP[p.destinoTipo]||p.destinoTipo);
+  if (p?.destinoTipo === 'bc' && (p?.destinoCountry || p?.destinoLote)) destinoDetalles.push((p.destinoCountry||'') + (p.destinoLote ? ' · Lote '+p.destinoLote : ''));
+  if (p?.destinoPiso) destinoDetalles.push('Piso '+p.destinoPiso+(p.destinoDepto||''));
+  if (p?.destinoPiso) destinoDetalles.push(p.destinoAscensor ? 'Con ascensor' : 'Sin ascensor');
+  const notas = p?.notas || null;
+  const cliente = p?.clienteNombre ? p.clienteNombre+(p.clienteApellido?' '+p.clienteApellido:'') : null;
+
+  return `<div class="pedido-card nomade-card" style="margin-bottom:0;">
+    <div class="pedido-header">
+      <span class="pedido-source">${isN ? '🟠 Mudar' : '🟢 Trabajo propio'}</span>
+      <span class="pedido-time">${t.fecha ? new Date(t.fecha+'T12:00:00').toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'}) : '—'}</span>
+    </div>
+    <div class="pedido-body">
+      <div class="pedido-route">
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <span class="pedido-route-from">📍 ${t.origen||'—'}</span>
+          ${origenDetalles.length ? `<span style="font-size:11px;color:var(--gray);padding-left:18px;">${origenDetalles.join(' · ')}</span>` : ''}
+        </div>
+        <span class="pedido-route-arrow">→</span>
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <span class="pedido-route-to">🏁 ${t.destino||'—'}</span>
+          ${destinoDetalles.length ? `<span style="font-size:11px;color:var(--gray);padding-left:18px;">${destinoDetalles.join(' · ')}</span>` : ''}
+        </div>
+      </div>
+      <div class="pedido-chips">
+        ${franja ? `<span class="pedido-chip">🕐 ${franja}</span>` : ''}
+        ${vehiculo ? `<span class="pedido-chip">🚛 ${vehiculo}</span>` : ''}
+        ${servicio ? `<span class="pedido-chip">🔧 ${servicio}</span>` : ''}
+      </div>
+      ${notas ? `<div style="background:#FEF3C7;border-radius:8px;padding:7px 10px;font-size:12px;color:#78350F;margin-bottom:6px;">💬 <strong>Nota:</strong> ${notas}</div>` : ''}
+      ${cliente ? `<div style="font-size:12px;color:var(--gray);margin-bottom:4px;">👤 <strong>${cliente}</strong>${p.clienteWapp?' · '+p.clienteWapp:''}</div>` : ''}
+      <div class="pedido-price">$${(t.precio||0).toLocaleString('es-AR')}</div>
+    </div>
+  </div>`;
+}
+
+function renderHoy() {
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+  const mananaDate = new Date(today); mananaDate.setDate(today.getDate()+1);
+  const mananaStr = mananaDate.toISOString().split('T')[0];
+  const fechaLabel = today.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('hoy-fecha').textContent = fechaLabel.charAt(0).toUpperCase()+fechaLabel.slice(1);
+  document.getElementById('hoy-greeting').textContent = `Hola, ${currentEmp?.nombre||''} 👋`;
+
+  const pendientes = pedidos.filter(p => p.estado==='pendiente');
+  const hoyTrabajos = trabajos.filter(t => t.fecha === todayStr);
+  const mananaTrabajos = trabajos.filter(t => t.fecha === mananaStr);
+
+  let html = '';
+
+  // ── Pedidos pendientes ──
+  if (pendientes.length > 0) {
+    html += `<div style="margin-bottom:20px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--orange);margin-bottom:10px;">🔔 Esperan tu respuesta (${pendientes.length})</div>
+      <div class="pedidos-grid">${pendientes.map(cardPendiente).join('')}</div>
+    </div>`;
+  }
+
+  // ── Hoy ──
+  if (hoyTrabajos.length > 0) {
+    html += `<div style="margin-bottom:20px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--green);margin-bottom:10px;">📦 Hoy — ${hoyTrabajos.length} trabajo${hoyTrabajos.length>1?'s':''}</div>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:720px;">${hoyTrabajos.map(cardHoyTrabajo).join('')}</div>
+    </div>`;
+  }
+
+  // ── Mañana ──
+  if (mananaTrabajos.length > 0) {
+    html += `<div style="margin-bottom:20px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--gray);margin-bottom:10px;">📅 Mañana — ${mananaTrabajos.length} trabajo${mananaTrabajos.length>1?'s':''}</div>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:720px;">${mananaTrabajos.map(cardHoyTrabajo).join('')}</div>
+    </div>`;
+  }
+
+  // ── Sin nada ──
+  if (!pendientes.length && !hoyTrabajos.length && !mananaTrabajos.length) {
+    html = `<div class="empty-state"><div class="icon">✅</div><h3>Todo tranquilo por ahora</h3><p>No tenés pedidos pendientes ni trabajos hoy o mañana.</p></div>`;
+  }
+
+  document.getElementById('hoy-content').innerHTML = html;
+}
+
+function showToast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+function getTimeAgo(ts) {
+  if(!ts) return '';
+  const mins=Math.floor((Date.now()-new Date(ts).getTime())/60000);
+  if(mins<1) return 'Ahora'; if(mins<60) return `Hace ${mins} min`;
+  const h=Math.floor(mins/60); if(h<24) return `Hace ${h}h`;
+  return `Hace ${Math.floor(h/24)}d`;
+}
+
+
+// ══════════════════════════════════════════════════════════
+//  AUTOCOMPLETE DE DIRECCIONES v2 — Nominatim OSM
+//  Mejoras:
+//  - Usa localidad/barrio seleccionado para acotar búsqueda
+//  - Muestra tipo de vía + contexto para distinguir homónimos
+//  - Debounce 450ms para no saturar la API
+//  - Cache por query para evitar requests repetidos
+// ══════════════════════════════════════════════════════════
+const AC_CACHE = {};
+let AC_TIMER = null;
+
+function acInit(inputId, localidadId, onSelect) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+
+  // Crear wrapper si no existe
+  if (!input.parentElement.classList.contains('ac-wrap')) {
+    const wrap = document.createElement('div');
+    wrap.className = 'ac-wrap';
+    input.parentNode.insertBefore(wrap, input);
+    wrap.appendChild(input);
+  }
+  const wrap = input.parentElement;
+  let drop = wrap.querySelector('.ac-dropdown');
+  if (!drop) {
+    drop = document.createElement('div');
+    drop.className = 'ac-dropdown';
+    wrap.appendChild(drop);
+  }
+
+  let activeIdx = -1;
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim();
+    activeIdx = -1;
+    if (q.length < 3) { acClose(drop); return; }
+    clearTimeout(AC_TIMER);
+    // Leer localidad seleccionada en ese momento
+    const localidadEl = document.getElementById(localidadId);
+    const localidad = localidadEl ? localidadEl.value : '';
+    AC_TIMER = setTimeout(() => acSearch(q, localidad, drop, input, onSelect), 450);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    const items = drop.querySelectorAll('.ac-item');
+    if (!items.length) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx+1, items.length-1); acHighlight(items, activeIdx); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx-1, 0); acHighlight(items, activeIdx); }
+    else if (e.key === 'Enter' && activeIdx >= 0) { e.preventDefault(); items[activeIdx].click(); }
+    else if (e.key === 'Escape') { acClose(drop); }
+  });
+
+  document.addEventListener('click', (e) => { if (!wrap.contains(e.target)) acClose(drop); });
+}
+
+async function acSearch(q, localidad, drop, input, onSelect) {
+  // Query enriquecida con localidad para acotar resultados
+  const queryBase = localidad ? `${q}, ${localidad}, Buenos Aires, Argentina` : `${q}, Buenos Aires, Argentina`;
+  const key = queryBase.toLowerCase();
+
+  if (AC_CACHE[key]) { acRender(AC_CACHE[key], drop, input, onSelect); return; }
+
+  drop.innerHTML = '<div class="ac-loading">🔍 Buscando...</div>';
+  drop.classList.add('open');
+
+  try {
+    const url = `https://nominatim.openstreetmap.org/search` +
+      `?q=${encodeURIComponent(queryBase)}` +
+      `&format=json&addressdetails=1&limit=8&countrycodes=ar`;
+
+    const res = await fetch(url, { headers: { 'Accept-Language': 'es', 'User-Agent': 'Mudar-App/1.0' } });
+    const data = await res.json();
+
+    // Filtrar: solo calles, casas, intersecciones — no países ni provincias
+    const TIPOS_OK = new Set(['house','road','pedestrian','footway','cycleway','path','residential','living_street','service','unclassified','tertiary','secondary','primary','trunk']);
+    const filtered = data.filter(r => {
+      const tipo = r.type || '';
+      const clase = r.class || '';
+      return clase === 'highway' || tipo === 'house' || TIPOS_OK.has(tipo);
+    });
+
+    // Deduplicar por nombre de calle — Nominatim devuelve un registro por cuadra
+    const base = filtered.length > 0 ? filtered : data;
+    const seen = new Set();
+    const unique = [];
+    for (const r of base) {
+      const addr = r.address || {};
+      const road = addr.road || addr.pedestrian || addr.footway || r.display_name.split(',')[0];
+      const key2 = road.toLowerCase().trim();
+      if (!seen.has(key2)) { seen.add(key2); unique.push(r); }
+      if (unique.length >= 5) break;
+    }
+    AC_CACHE[key] = unique;
+    acRender(unique, drop, input, onSelect);
+
+  } catch(e) {
+    drop.innerHTML = '<div class="ac-loading">Sin conexión — escribí la dirección manualmente</div>';
+  }
+}
+
+function acRender(results, drop, input, onSelect) {
+  if (!results.length) {
+    drop.innerHTML = '<div class="ac-loading">Sin resultados — intentá con otra variante (Ej: "Av. Cabildo" en vez de "Cabildo")</div>';
+    drop.classList.add('open');
+    return;
+  }
+
+  drop.innerHTML = results.map((r, i) => {
+    const addr = r.address || {};
+    const road = addr.road || addr.pedestrian || addr.footway || '';
+    const numero = addr.house_number || '';
+    const barrio = addr.suburb || addr.neighbourhood || addr.city_district || addr.quarter || '';
+    const localidad = addr.city || addr.town || addr.village || addr.municipality || '';
+    const provincia = addr.state || '';
+
+    // Tipo de vía legible
+    const tipoVia = r.type === 'house' ? '' :
+      road.toLowerCase().startsWith('av') ? '🛣 Avenida' :
+      road.toLowerCase().startsWith('pas') ? '🚶 Pasaje' :
+      road.toLowerCase().startsWith('diag') ? '↗ Diagonal' : '🛤 Calle';
+
+    const main = [road, numero].filter(Boolean).join(' ') || r.display_name.split(',')[0];
+    // Contexto detallado para distinguir homónimos
+    const ctx = [barrio, localidad, provincia !== 'Buenos Aires' ? provincia : ''].filter(Boolean).join(', ');
+
+    return `<div class="ac-item" data-idx="${i}" onclick="acSelect(this,event)">
+      <span class="ac-item-main">${main}</span>
+      <span class="ac-item-sub">${tipoVia ? tipoVia + (ctx ? ' · ' : '') : ''}${ctx}</span>
+    </div>`;
+  }).join('');
+
+  drop._results = results;
+  drop._onSelect = onSelect;
+  drop._input = input;
+  drop.classList.add('open');
+}
+
+function acSelect(el, e) {
+  e.stopPropagation();
+  const drop = el.closest('.ac-dropdown');
+  const idx = parseInt(el.dataset.idx);
+  const r = drop._results[idx];
+  const addr = r.address || {};
+  const road = addr.road || addr.pedestrian || addr.footway || '';
+  const numero = addr.house_number || '';
+  const texto = [road, numero].filter(Boolean).join(' ') || r.display_name.split(',')[0];
+
+  drop._input.value = texto;
+  drop._input.dispatchEvent(new Event('change'));
+  acClose(drop);
+
+  if (drop._onSelect) drop._onSelect({
+    display: texto,
+    barrio: addr.suburb || addr.neighbourhood || addr.city_district || '',
+    localidad: addr.city || addr.town || addr.village || '',
+    lat: parseFloat(r.lat),
+    lon: parseFloat(r.lon)
+  });
+}
+
+function acClose(drop) { drop.classList.remove('open'); drop.innerHTML = ''; }
+function acHighlight(items, idx) { items.forEach((el,i) => el.classList.toggle('selected', i===idx)); }
+
+
+// calcDistanciaExacta reemplazada por modelo mejorado arriba
+
+// ── Inicializar autocomplete en panel fletero ──
+// Guardar coords para cálculo exacto
+const panelCoords = { origen: null, destino: null };
+
+function panelActualizarBanner() {
+  if (panelCoords.origen && panelCoords.destino) {
+    const r = calcDistanciaExacta(panelCoords.origen.lat, panelCoords.origen.lon, panelCoords.destino.lat, panelCoords.destino.lon);
+    let banner = document.getElementById('panel-distancia-banner');
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.id = 'panel-distancia-banner';
+      banner.style = 'display:flex;align-items:center;gap:8px;background:#EFF6FF;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:600;color:#1E40AF;margin-top:8px;';
+      const btn = document.getElementById('add-destino-dir');
+      if (btn) btn.closest('.field').parentElement.insertAdjacentElement('afterend', banner);
+    }
+    banner.innerHTML = `🗺️ ${r.km} km`;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  acInit('add-origen-dir', 'add-origen', (sel) => {
+    panelCoords.origen = sel;
+    panelActualizarBanner();
+  });
+  acInit('add-destino-dir', 'add-destino', (sel) => {
+    panelCoords.destino = sel;
+    panelActualizarBanner();
+  });
+});
+
+// ══════════════════════════════════════════════════════════
+//  TARIFAS — estado y persistencia
+// ══════════════════════════════════════════════════════════
+let tarifas = {};
+
+const VEHICULOS_LIST = ['utilitario','camioneta','camion-chico','camion-grande'];
+const SVCS_CON_PRECIO = ['embalaje','desarme','fragiles','piano','guardamuebles','sillones-balcon'];
+const SVCS_SOLO_TOGGLE = ['express','seguro'];
+
+async function loadTarifasData() {
+  const saved = await DB.get(`empresas/${currentEmpId}/tarifas`);
+  tarifas = saved || {};
+}
+
+function loadTarifasUI() {
+  VEHICULOS_LIST.forEach(v => {
+    const cb = document.getElementById('v-'+v);
+    const inp = document.getElementById('p-'+v);
+    if (!cb) return;
+    cb.checked = !!tarifas['v_'+v];
+    if (inp) { inp.disabled = !cb.checked; inp.value = tarifas['p_'+v] || ''; }
+  });
+  // Tarifa horaria
+  ['precio-hora','horas-incluidas','piso','ayudante-extra','acceso-dificil','recargo-sabado','recargo-domingo','horas-min'].forEach(k => {
+    const el = document.getElementById('r-'+k);
+    if (el) el.value = tarifas['r_'+k.replace(/-/g,'_')] || '';
+  });
+  const ai = document.getElementById('r-ayudantes-incluidos');
+  if (ai) ai.value = tarifas['r_ayudantes_incluidos'] ?? 1;
+  SVCS_CON_PRECIO.forEach(s => {
+    const cb = document.getElementById('s-'+s);
+    const inp = document.getElementById('p-'+s);
+    if (!cb) return;
+    cb.checked = !!tarifas['s_'+s.replace(/-/g,'_')];
+    if (inp) { inp.disabled = !cb.checked; inp.value = tarifas['p_'+s.replace(/-/g,'_')] || ''; }
+  });
+  SVCS_SOLO_TOGGLE.forEach(s => {
+    const cb = document.getElementById('s-'+s);
+    if (cb) cb.checked = !!tarifas['s_'+s];
+  });
+  updateTarifa();
+}
+
+function toggleServicio(svc) {
+  const cb = document.getElementById('s-'+svc);
+  const inp = document.getElementById('p-'+svc);
+  if (inp) inp.disabled = !cb.checked;
+  updateTarifa();
+}
+
+// ══════════════════════════════════════════════════════════
+//  COTIZADOR
+// ══════════════════════════════════════════════════════════
+let cotAyudantesExtra = 0;
+let cotSvcsSeleccionados = {};
+let cotHorasTraslado = 0;
+let ultimoCotTotal = 0;
+let ultimoCotData = {};
+
+const SVC_LABELS = {
+  embalaje:        { label: 'Embalaje completo',           icon: '📦' },
+  desarme:         { label: 'Desarme y armado de muebles', icon: '🔧' },
+  fragiles:        { label: 'Objetos frágiles / arte',     icon: '🎨' },
+  piano:           { label: 'Piano / caja fuerte',         icon: '🎹' },
+  guardamuebles:   { label: 'Guardamuebles',               icon: '🏪' },
+  sillones_balcon: { label: 'Subida por balcón',           icon: '🪢' },
+};
+
+const VIVIENDA_LABEL    = { mono:'Monoambiente', '2amb':'2 ambientes', '3amb':'3 ambientes', casa:'Casa / 4+ ambientes' };
+const VIVIENDA_HS       = { mono:'2–3 hs', '2amb':'3–5 hs', '3amb':'5–8 hs', casa:'8–12 hs' };
+const VEHICULO_NOMBRES  = { utilitario:'Utilitario', camioneta:'Camioneta', 'camion-chico':'Camión chico', 'camion-grande':'Camión grande' };
+
+function loadCotizadorUI() {
+  const tieneVehiculo = VEHICULOS_LIST.some(v => tarifas['v_'+v] && tarifas['p_'+v] > 0);
+  const noConf = document.getElementById('cot-no-config');
+  if (noConf) {
+    noConf.style.display = tieneVehiculo ? 'none' : 'block';
+    if (!tieneVehiculo) noConf.innerHTML = '⚠️ Todavía no configuraste tus vehículos. Andá a <strong>Mis tarifas y servicios</strong> primero.';
+  }
+  const sel = document.getElementById('cot-vehiculo');
+  if (sel) {
+    Array.from(sel.options).forEach(opt => {
+      if (!opt.value) return;
+      const ok = tarifas['v_'+opt.value] && tarifas['p_'+opt.value] > 0;
+      opt.disabled = !ok;
+      opt.text = opt.text.replace(' ✗','') + (ok ? '' : ' ✗');
+    });
+  }
+  const svcsEl = document.getElementById('cot-servicios-list');
+  if (svcsEl) {
+    const disponibles = Object.keys(SVC_LABELS).filter(s => tarifas['s_'+s]);
+    svcsEl.innerHTML = disponibles.length === 0
+      ? `<div style="font-size:12px;color:var(--gray);padding:6px 0;">No configuraste servicios adicionales aún.</div>`
+      : disponibles.map(s => {
+          const info = SVC_LABELS[s];
+          const precio = tarifas['p_'+s] || 0;
+          return `<div class="cot-svc-row">
+            <input type="checkbox" class="cot-svc-check" id="csvc-${s}" ${cotSvcsSeleccionados[s]?'checked':''} onchange="toggleCotSvc('${s}')">
+            <label class="cot-svc-label" for="csvc-${s}">${info.icon} ${info.label}</label>
+            ${precio > 0 ? `<span class="cot-svc-price">+$${precio.toLocaleString('es-AR')}</span>` : ''}
+          </div>`;
+        }).join('');
+  }
+  updateHorasInfo();
+  calcCotizador();
+}
+
+function toggleCotSvc(svc) {
+  cotSvcsSeleccionados[svc] = document.getElementById('csvc-'+svc)?.checked || false;
+  calcCotizador();
+}
+
+function setCotAyudante(n, btn) {
+  cotAyudantesExtra = n;
+  document.querySelectorAll('#cot-ayudantes-chips .cot-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  calcCotizador();
+}
+
+function setCotHoras(n, btn) {
+  cotHorasTraslado = n;
+  document.querySelectorAll('#cot-horas-chips .cot-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateHorasInfo();
+  calcCotizador();
+}
+
+function updateHorasInfo() {
+  const infoEl = document.getElementById('cot-horas-info');
+  if (!infoEl) return;
+  const precioHora = tarifas['r_precio_hora'] || 0;
+  const horasIncluidas = tarifas['r_horas_incluidas'] || 1;
+  const horasFacturables = Math.max(0, cotHorasTraslado - horasIncluidas);
+  if (cotHorasTraslado === 0) {
+    infoEl.textContent = 'Sin recargo por traslado — mudanza local.';
+  } else if (horasFacturables === 0) {
+    infoEl.textContent = `${cotHorasTraslado}hs incluidas en tarifa base — sin recargo extra.`;
+  } else if (precioHora > 0) {
+    infoEl.textContent = `${horasFacturables}hs extra × $${precioHora.toLocaleString('es-AR')}/hs = $${(horasFacturables*precioHora).toLocaleString('es-AR')} de recargo.`;
+  } else {
+    infoEl.textContent = 'Configurá el precio/hora en Mis tarifas para ver el recargo.';
+  }
+}
+
+function detectarDiaSemana(fechaStr) {
+  if (!fechaStr) return null;
+  const FERIADOS = ['01-01','24-03','02-04','01-05','25-05','20-06','09-07','17-08','12-10','20-11','08-12','25-12'];
+  const [y,m,d] = fechaStr.split('-');
+  if (FERIADOS.includes(`${d}-${m}`)) return 'feriado';
+  const dow = new Date(fechaStr+'T12:00:00').getDay();
+  if (dow === 0) return 'domingo';
+  if (dow === 6) return 'sabado';
+  return 'semana';
+}
+
+function calcCotizador() {
+  const vehiculo = document.getElementById('cot-vehiculo')?.value;
+  const vivienda = document.getElementById('cot-vivienda')?.value;
+  const emptyEl = document.getElementById('cot-empty-state');
+  const resultEl = document.getElementById('cot-resultado');
+  if (!vehiculo) {
+    if (emptyEl) emptyEl.style.display = 'block';
+    if (resultEl) resultEl.style.display = 'none';
+    return;
+  }
+  const fechaStr = document.getElementById('cot-fecha')?.value || '';
+  const tipoDia = detectarDiaSemana(fechaStr);
+  const diaBadge = document.getElementById('cot-dia-badge');
+  if (diaBadge) {
+    if (tipoDia==='sabado') {
+      diaBadge.style.display='block';
+      diaBadge.innerHTML=`<span style="background:var(--yellow-light);color:var(--yellow);border-radius:50px;padding:3px 10px;font-size:11px;font-weight:700;">🟡 Sábado — recargo ${tarifas['r_recargo_sabado']||15}%</span>`;
+    } else if (tipoDia==='domingo'||tipoDia==='feriado') {
+      diaBadge.style.display='block';
+      diaBadge.innerHTML=`<span style="background:var(--red-light);color:var(--red);border-radius:50px;padding:3px 10px;font-size:11px;font-weight:700;">🔴 ${tipoDia==='feriado'?'Feriado':'Domingo'} — recargo ${tarifas['r_recargo_domingo']||40}%</span>`;
+    } else {
+      diaBadge.style.display = fechaStr ? 'block' : 'none';
+      if (fechaStr) diaBadge.innerHTML=`<span style="background:var(--green-light);color:var(--green);border-radius:50px;padding:3px 10px;font-size:11px;font-weight:700;">✅ Día hábil — sin recargo</span>`;
+    }
+  }
+
+  const breakdown = [];
+  let total = 0;
+
+  // 1. Base VEHÍCULO
+  const base = (tarifas['v_'+vehiculo] && tarifas['p_'+vehiculo]) ? tarifas['p_'+vehiculo] : 0;
+  total += base;
+  breakdown.push({ label: `Tarifa base — ${VEHICULO_NOMBRES[vehiculo]||vehiculo}`, val: base });
+
+  // 2. Horas de traslado
+  const precioHora = tarifas['r_precio_hora'] || 0;
+  const horasIncluidas = tarifas['r_horas_incluidas'] || 1;
+  const horasFacturables = Math.max(0, cotHorasTraslado - horasIncluidas);
+  if (cotHorasTraslado > 0 && precioHora > 0 && horasFacturables > 0) {
+    const montoHoras = Math.round(horasFacturables * precioHora);
+    total += montoHoras;
+    breakdown.push({ label: `Traslado ${cotHorasTraslado}hs (${horasFacturables}hs × $${precioHora.toLocaleString('es-AR')})`, val: montoHoras });
+  } else if (cotHorasTraslado > 0 && precioHora > 0) {
+    breakdown.push({ label: `Traslado ${cotHorasTraslado}hs (incluido en base)`, val: 0 });
+  }
+
+  // 3. Recargo día
+  if (tipoDia==='sabado' && (tarifas['r_recargo_sabado']||0)>0) {
+    const pct=tarifas['r_recargo_sabado'], monto=Math.round(base*pct/100);
+    total+=monto; breakdown.push({ label:`Recargo sábado (+${pct}%)`, val:monto });
+  } else if ((tipoDia==='domingo'||tipoDia==='feriado') && (tarifas['r_recargo_domingo']||0)>0) {
+    const pct=tarifas['r_recargo_domingo'], monto=Math.round(base*pct/100);
+    total+=monto; breakdown.push({ label:`Recargo ${tipoDia} (+${pct}%)`, val:monto });
+  }
+
+  // 4. Pisos
+  const pisosOrigen=parseInt(document.getElementById('cot-piso-origen')?.value)||0;
+  const pisosDestino=parseInt(document.getElementById('cot-piso-destino')?.value)||0;
+  const recargoPiso=tarifas['r_piso']||0;
+  const totalPisos=pisosOrigen+pisosDestino;
+  if (totalPisos>0 && recargoPiso>0) {
+    const monto=totalPisos*recargoPiso;
+    total+=monto; breakdown.push({ label:`Pisos sin ascensor (${totalPisos})`, val:monto });
+  }
+
+  // 5. Acceso difícil
+  if (document.getElementById('cot-acceso-dificil')?.checked && (tarifas['r_acceso_dificil']||0)>0) {
+    total+=tarifas['r_acceso_dificil'];
+    breakdown.push({ label:'Acceso difícil', val:tarifas['r_acceso_dificil'] });
+  }
+
+  // 6. Ayudantes
+  const costoAyudante=tarifas['r_ayudante_extra']||0;
+  if (cotAyudantesExtra>0 && costoAyudante>0) {
+    const monto=cotAyudantesExtra*costoAyudante;
+    total+=monto; breakdown.push({ label:`${cotAyudantesExtra} ayudante${cotAyudantesExtra>1?'s':''} extra`, val:monto });
+  }
+
+  // 7. Servicios
+  Object.keys(cotSvcsSeleccionados).forEach(s => {
+    if (!cotSvcsSeleccionados[s]) return;
+    const precio=tarifas['p_'+s]||0;
+    if (precio>0) {
+      total+=precio;
+      const info=SVC_LABELS[s]||{label:s,icon:'➕'};
+      breakdown.push({ label:`${info.icon} ${info.label}`, val:precio });
+    }
+  });
+
+  ultimoCotTotal = total;
+  ultimoCotData = { vehiculo, vivienda, breakdown, tipoDia, fechaStr };
+
+  if (emptyEl) emptyEl.style.display = 'none';
+  if (resultEl) {
+    resultEl.style.display = 'block';
+    const horasEst = vivienda ? (VIVIENDA_HS[vivienda]||'—') : '—';
+    const ayudantesIncluidos = tarifas['r_ayudantes_incluidos']||1;
+    const svcsActivos = Object.keys(cotSvcsSeleccionados).filter(s=>cotSvcsSeleccionados[s]&&SVC_LABELS[s]).map(s=>SVC_LABELS[s].icon+' '+SVC_LABELS[s].label);
+    resultEl.innerHTML = `
+      <div class="cot-result-card" id="cot-result-card">
+        <div class="cot-result-eyebrow">Precio para esta mudanza</div>
+        <div class="cot-result-price">$${total.toLocaleString('es-AR')}</div>
+        <div class="cot-km-badge" style="margin-top:10px;">
+          🚛 ${VEHICULO_NOMBRES[vehiculo]||vehiculo}${vivienda?' · '+VIVIENDA_LABEL[vivienda]:''}${horasEst!=='—'?' · ~'+horasEst:''}
+        </div>
+        <div class="cot-km-badge" style="margin-top:6px;">
+          👷 ${ayudantesIncluidos} ayudante${ayudantesIncluidos>1?'s':''} incluido${ayudantesIncluidos>1?'s':''}${cotHorasTraslado>0?' · Traslado: '+cotHorasTraslado+'hs':''}
+        </div>
+        ${svcsActivos.length?`<div style="margin-top:8px;font-size:11px;color:rgba(255,255,255,0.45);">${svcsActivos.join(' · ')}</div>`:''}
+        <div class="cot-breakdown">
+          ${breakdown.map(b=>`
+            <div class="cot-brow">
+              <span class="cot-brow-label">${b.label}</span>
+              <span class="cot-brow-val">${b.val>0?'$'+b.val.toLocaleString('es-AR'):'Incluido'}</span>
+            </div>`).join('')}
+          <div class="cot-brow is-total">
+            <span class="cot-brow-label">Total</span>
+            <span class="cot-brow-val">$${total.toLocaleString('es-AR')}</span>
+          </div>
+        </div>
+        <button class="cot-wa-btn" onclick="compartirImagenWhatsApp()">
+          📲 Compartir cotización por WhatsApp
+        </button>
+      </div>`;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  IMAGEN CANVAS PARA WHATSAPP
+// ══════════════════════════════════════════════════════════
+function compartirImagenWhatsApp() {
+  const empresa = currentEmp?.nombre || 'Mudar';
+  const total = ultimoCotTotal;
+  const data = ultimoCotData;
+  if (!total) return;
+  const canvas = document.getElementById('cot-canvas');
+  if (!canvas) { cotizadorWhatsAppTexto(); return; }
+
+  const items = (data.breakdown||[]).filter(b => b.val > 0);
+  const W = 600, PADDING = 36;
+  const H = 130 + (items.length * 28) + 30 + 120;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // Fondo
+  ctx.fillStyle = '#0F0F0F';
+  ctx.fillRect(0, 0, W, H);
+
+  // Borde naranja superior
+  const g = ctx.createLinearGradient(0,0,W,0);
+  g.addColorStop(0,'#FF5A1F'); g.addColorStop(1,'#FF8C5A');
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,5);
+
+  // Logo "Mudar" — "Mud" blanco + "ar" naranja
+  ctx.font = '900 14px sans-serif';
+  let logoX = PADDING;
+  const logoY = 36;
+  // "Mud" blanco
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillText('Mud', logoX, logoY);
+  logoX += ctx.measureText('Mud').width;
+  // "ar" naranja
+  ctx.fillStyle = '#FF5A1F';
+  ctx.fillText('ar', logoX, logoY);
+  logoX += ctx.measureText('ar').width;
+  // línea naranja bajo el logo
+  ctx.fillStyle = '#FF5A1F';
+  ctx.fillRect(PADDING, 42, logoX - PADDING, 2);
+
+  // Empresa
+  ctx.fillStyle='#FFFFFF';
+  ctx.font='bold 26px sans-serif';
+  ctx.fillText(empresa, PADDING, 82);
+
+  // Subtítulo
+  const sub = data.vivienda ? VIVIENDA_LABEL[data.vivienda] : (VEHICULO_NOMBRES[data.vehiculo]||'');
+  ctx.fillStyle='rgba(255,255,255,0.4)';
+  ctx.font='14px sans-serif';
+  ctx.fillText(sub, PADDING, 104);
+
+  // Línea
+  ctx.strokeStyle='rgba(255,255,255,0.08)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(PADDING,118); ctx.lineTo(W-PADDING,118); ctx.stroke();
+
+  // Desglose
+  let y = 148;
+  items.forEach(b => {
+    ctx.fillStyle='rgba(255,255,255,0.45)';
+    ctx.font='13px sans-serif'; ctx.textAlign='left';
+    ctx.fillText(b.label, PADDING, y);
+    ctx.fillStyle='rgba(255,255,255,0.75)';
+    ctx.textAlign='right';
+    ctx.fillText('$'+b.val.toLocaleString('es-AR'), W-PADDING, y);
+    y += 28;
+  });
+
+  // Línea divisoria total
+  ctx.strokeStyle='rgba(255,255,255,0.12)';
+  ctx.beginPath(); ctx.moveTo(PADDING,y+6); ctx.lineTo(W-PADDING,y+6); ctx.stroke();
+
+  // Label TOTAL
+  ctx.textAlign='left';
+  ctx.fillStyle='rgba(255,255,255,0.35)';
+  ctx.font='11px sans-serif';
+  ctx.fillText('TOTAL', PADDING, y+26);
+
+  // Precio — naranja grande, siempre dentro del canvas
+  ctx.fillStyle='#FF5A1F';
+  ctx.font='bold 52px sans-serif';
+  ctx.fillText('$'+total.toLocaleString('es-AR'), PADDING, y+78);
+
+  canvas.toBlob(blob => {
+    if (!blob) { cotizadorWhatsAppTexto(); return; }
+    if (navigator.share && navigator.canShare) {
+      const file = new File([blob], 'cotizacion-mudar.png', {type:'image/png'});
+      if (navigator.canShare({files:[file]})) {
+        navigator.share({files:[file], title:`Cotizacion ${empresa}`, text:`$${total.toLocaleString('es-AR')}`})
+          .catch(()=>descargarImagen(canvas));
+        return;
+      }
+    }
+    descargarImagen(canvas);
+  }, 'image/png');
+}
+
+function descargarImagen(canvas) {
+  const empresa = currentEmp?.nombre || 'Mudar';
+  const total = ultimoCotTotal;
+  const a = document.createElement('a');
+  a.download = `cotizacion-${empresa.replace(/\s+/g,'-').toLowerCase()}.png`;
+  a.href = canvas.toDataURL('image/png'); a.click();
+  const isDesktop = !(/Android|iPhone|iPad/i.test(navigator.userAgent));
+  if (isDesktop) {
+    showToast('📥 Imagen guardada en Descargas — adjuntala en WhatsApp Web');
+    setTimeout(() => {
+      window.open('https://web.whatsapp.com/', '_blank');
+      setTimeout(() => showToast('📎 Adjuntá la imagen que se descargó'), 1500);
+    }, 800);
+  } else {
+    setTimeout(() => {
+      const msg = `Hola! Te adjunto la cotización de *${empresa}* para tu mudanza.\n\nTotal: *$${total.toLocaleString('es-AR')}*\n\nSe confirma el día de la mudanza según accesos.\n¿Coordinamos?`;
+      window.open('https://wa.me/?text='+encodeURIComponent(msg), '_blank');
+    }, 600);
+    showToast('📥 Imagen descargada — abriendo WhatsApp...');
+  }
+}
+
+function cotizadorWhatsAppTexto() {
+  const empresa = currentEmp?.nombre || 'nuestra empresa';
+  const total = ultimoCotTotal;
+  const data = ultimoCotData;
+  const svcsActivos = Object.keys(cotSvcsSeleccionados).filter(s=>cotSvcsSeleccionados[s]&&SVC_LABELS[s]).map(s=>SVC_LABELS[s].label);
+  const msg = `Hola! Te paso la cotizacion de *${empresa}*:\n\n`+
+    `Vehiculo: ${VEHICULO_NOMBRES[data.vehiculo]||''}\n`+
+    (data.vivienda?`Vivienda: ${VIVIENDA_LABEL[data.vivienda]}\n`:'')+
+    (svcsActivos.length?`Servicios: ${svcsActivos.join(', ')}\n`:'')+
+    `\nTotal: *$${total.toLocaleString('es-AR')}*\n\nSe confirma el dia de la mudanza.\nCoordinamos?`;
+  window.open('https://wa.me/?text='+encodeURIComponent(msg), '_blank');
+}
+
+function updateTarifa() {
+  VEHICULOS_LIST.forEach(v => {
+    const cb = document.getElementById('v-'+v);
+    const inp = document.getElementById('p-'+v);
+    if (cb && inp) inp.disabled = !cb.checked;
+  });
+  updatePerfilBar();
+}
+
+function updatePerfilBar() {
+  let pts = 0;
+  if (VEHICULOS_LIST.some(v => document.getElementById('v-'+v)?.checked && parseInt(document.getElementById('p-'+v)?.value) > 0)) pts += 30;
+  if (parseInt(document.getElementById('r-precio-hora')?.value) > 0) pts += 25;
+  if (parseInt(document.getElementById('r-piso')?.value) > 0) pts += 15;
+  if (parseInt(document.getElementById('r-recargo-sabado')?.value) > 0) pts += 15;
+  if (SVCS_CON_PRECIO.some(s => document.getElementById('s-'+s)?.checked)) pts += 15;
+
+  const bar = document.getElementById('perfil-bar');
+  const pct = document.getElementById('perfil-pct');
+  const lbl = document.getElementById('perfil-bar-label');
+  if (bar) bar.style.width = pts + '%';
+  if (pct) pct.textContent = pts + '%';
+  if (lbl) lbl.textContent = pts === 100 ? '✅ Perfil completo — aparecés en todas las búsquedas'
+    : pts >= 55 ? 'Buen perfil — completá el resto para más pedidos'
+    : 'Completá tus tarifas para aparecer en el marketplace';
+}
+
+async function saveTarifas() {
+  const data = {};
+  VEHICULOS_LIST.forEach(v => {
+    data['v_'+v] = !!document.getElementById('v-'+v)?.checked;
+    data['p_'+v] = parseInt(document.getElementById('p-'+v)?.value) || 0;
+  });
+  ['precio-hora','horas-incluidas','piso','ayudante-extra','acceso-dificil','recargo-sabado','recargo-domingo','horas-min'].forEach(k => {
+    data['r_'+k.replace(/-/g,'_')] = parseInt(document.getElementById('r-'+k)?.value) || 0;
+  });
+  data['r_ayudantes_incluidos'] = parseInt(document.getElementById('r-ayudantes-incluidos')?.value) || 1;
+  SVCS_CON_PRECIO.forEach(s => {
+    const key = s.replace(/-/g,'_');
+    data['s_'+key] = !!document.getElementById('s-'+s)?.checked;
+    data['p_'+key] = parseInt(document.getElementById('p-'+s)?.value) || 0;
+  });
+  SVCS_SOLO_TOGGLE.forEach(s => { data['s_'+s] = !!document.getElementById('s-'+s)?.checked; });
+  setSyncStatus('syncing');
+  await DB.set(`empresas/${currentEmpId}/tarifas`, data);
+  tarifas = data;
+  setSyncStatus('ok');
+  showToast('✅ Tarifas guardadas correctamente');
+}
+
+</script>
+</body>
+</html>
